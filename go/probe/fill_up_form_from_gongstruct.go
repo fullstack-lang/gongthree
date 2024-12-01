@@ -20,24 +20,36 @@ func FillUpNamedFormFromGongstruct[T models.Gongstruct](instance *T, probe *Prob
 
 	switch instancesTyped := any(instance).(type) {
 	// insertion point
-	case *models.Country:
+	case *models.BezierCurve:
 		formGroup := (&gongtable.FormGroup{
 			Name:  formName,
-			Label: "Country Form",
+			Label: "BezierCurve Form",
 		}).Stage(formStage)
-		formGroup.OnSave = __gong__New__CountryFormCallback(
+		formGroup.OnSave = __gong__New__BezierCurveFormCallback(
 			instancesTyped,
 			probe,
 			formGroup,
 		)
 		formGroup.HasSuppressButton = true
 		FillUpForm(instancesTyped, formGroup, probe)
-	case *models.Hello:
+	case *models.BezierSegment:
 		formGroup := (&gongtable.FormGroup{
 			Name:  formName,
-			Label: "Hello Form",
+			Label: "BezierSegment Form",
 		}).Stage(formStage)
-		formGroup.OnSave = __gong__New__HelloFormCallback(
+		formGroup.OnSave = __gong__New__BezierSegmentFormCallback(
+			instancesTyped,
+			probe,
+			formGroup,
+		)
+		formGroup.HasSuppressButton = true
+		FillUpForm(instancesTyped, formGroup, probe)
+	case *models.Vector2:
+		formGroup := (&gongtable.FormGroup{
+			Name:  formName,
+			Label: "Vector2 Form",
+		}).Stage(formStage)
+		formGroup.OnSave = __gong__New__Vector2FormCallback(
 			instancesTyped,
 			probe,
 			formGroup,

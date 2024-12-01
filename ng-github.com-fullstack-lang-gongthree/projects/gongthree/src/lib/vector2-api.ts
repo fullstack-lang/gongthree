@@ -1,12 +1,11 @@
 // insertion point for imports
-import { HelloAPI } from './hello-api'
 
 // usefull for managing pointer ID values that can be nullable
 import { NullInt64 } from './null-int64'
 
-export class CountryAPI {
+export class Vector2API {
 
-	static GONGSTRUCT_NAME = "Country"
+	static GONGSTRUCT_NAME = "Vector2"
 
 	CreatedAt?: string
 	DeletedAt?: string
@@ -14,15 +13,14 @@ export class CountryAPI {
 
 	// insertion point for basic fields declarations
 	Name: string = ""
+	X: number = 0
+	Y: number = 0
 
 	// insertion point for other decls
 
-	CountryPointersEncoding: CountryPointersEncoding = new CountryPointersEncoding
+	Vector2PointersEncoding: Vector2PointersEncoding = new Vector2PointersEncoding
 }
 
-export class CountryPointersEncoding {
+export class Vector2PointersEncoding {
 	// insertion point for pointers and slices of pointers encoding fields
-	HelloID: NullInt64 = new NullInt64 // if pointer is null, Hello.ID = 0
-
-	AlternateHellos: number[] = []
 }

@@ -1,24 +1,30 @@
 // generated code - do not edit
 
 //insertion point for imports
-import { CountryAPI } from './country-api'
+import { BezierCurveAPI } from './beziercurve-api'
 
-import { HelloAPI } from './hello-api'
+import { BezierSegmentAPI } from './beziersegment-api'
+
+import { Vector2API } from './vector2-api'
 
 
 export class BackRepoData {
 	// insertion point for declarations
-	CountryAPIs = new Array<CountryAPI>()
+	BezierCurveAPIs = new Array<BezierCurveAPI>()
 
-	HelloAPIs = new Array<HelloAPI>()
+	BezierSegmentAPIs = new Array<BezierSegmentAPI>()
+
+	Vector2APIs = new Array<Vector2API>()
 
 
 
 	constructor(data?: Partial<BackRepoData>) {
 		// insertion point for copies
-		this.CountryAPIs = data?.CountryAPIs || [];
+		this.BezierCurveAPIs = data?.BezierCurveAPIs || [];
 
-		this.HelloAPIs = data?.HelloAPIs || [];
+		this.BezierSegmentAPIs = data?.BezierSegmentAPIs || [];
+
+		this.Vector2APIs = data?.Vector2APIs || [];
 
 	}
 

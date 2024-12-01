@@ -14,21 +14,26 @@ func GetReverseFieldOwnerName[T models.Gongstruct](
 	res = ""
 	switch inst := any(instance).(type) {
 	// insertion point
-	case *models.Country:
+	case *models.BezierCurve:
 		switch reverseField.GongstructName {
 		// insertion point
 		}
 
-	case *models.Hello:
+	case *models.BezierSegment:
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Country":
+		case "BezierCurve":
 			switch reverseField.Fieldname {
-			case "AlternateHellos":
-				if _country, ok := stage.Country_AlternateHellos_reverseMap[inst]; ok {
-					res = _country.Name
+			case "BezierSegments":
+				if _beziercurve, ok := stage.BezierCurve_BezierSegments_reverseMap[inst]; ok {
+					res = _beziercurve.Name
 				}
 			}
+		}
+
+	case *models.Vector2:
+		switch reverseField.GongstructName {
+		// insertion point
 		}
 
 	default:
@@ -46,19 +51,24 @@ func GetReverseFieldOwner[T models.Gongstruct](
 	res = nil
 	switch inst := any(instance).(type) {
 	// insertion point
-	case *models.Country:
+	case *models.BezierCurve:
 		switch reverseField.GongstructName {
 		// insertion point
 		}
 
-	case *models.Hello:
+	case *models.BezierSegment:
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Country":
+		case "BezierCurve":
 			switch reverseField.Fieldname {
-			case "AlternateHellos":
-				res = stage.Country_AlternateHellos_reverseMap[inst]
+			case "BezierSegments":
+				res = stage.BezierCurve_BezierSegments_reverseMap[inst]
 			}
+		}
+
+	case *models.Vector2:
+		switch reverseField.GongstructName {
+		// insertion point
 		}
 
 	default:

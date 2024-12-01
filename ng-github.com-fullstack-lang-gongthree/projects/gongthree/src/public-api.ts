@@ -13,13 +13,17 @@ export * from './lib/back-repo-data'
 export * from './lib/web-socket-service'
 
 
-export * from './lib/country-api'
-export * from './lib/country'
-export * from './lib/country.service'
+export * from './lib/beziercurve-api'
+export * from './lib/beziercurve'
+export * from './lib/beziercurve.service'
 
-export * from './lib/hello-api'
-export * from './lib/hello'
-export * from './lib/hello.service'
+export * from './lib/beziersegment-api'
+export * from './lib/beziersegment'
+export * from './lib/beziersegment.service'
+
+export * from './lib/vector2-api'
+export * from './lib/vector2'
+export * from './lib/vector2.service'
 
 
 export * from './lib/StacksNames'

@@ -20,13 +20,17 @@ type DBLite struct {
 
 	// insertion point definitions
 
-	countryDBs map[uint]*CountryDB
+	beziercurveDBs map[uint]*BezierCurveDB
 
-	nextIDCountryDB uint
+	nextIDBezierCurveDB uint
 
-	helloDBs map[uint]*HelloDB
+	beziersegmentDBs map[uint]*BezierSegmentDB
 
-	nextIDHelloDB uint
+	nextIDBezierSegmentDB uint
+
+	vector2DBs map[uint]*Vector2DB
+
+	nextIDVector2DB uint
 }
 
 // NewDBLite creates a new instance of DBLite
@@ -34,9 +38,11 @@ func NewDBLite() *DBLite {
 	return &DBLite{
 		// insertion point maps init
 
-		countryDBs: make(map[uint]*CountryDB),
+		beziercurveDBs: make(map[uint]*BezierCurveDB),
 
-		helloDBs: make(map[uint]*HelloDB),
+		beziersegmentDBs: make(map[uint]*BezierSegmentDB),
+
+		vector2DBs: make(map[uint]*Vector2DB),
 	}
 }
 
@@ -51,14 +57,18 @@ func (db *DBLite) Create(instanceDB any) (db.DBInterface, error) {
 
 	switch v := instanceDB.(type) {
 	// insertion point create
-	case *CountryDB:
-		db.nextIDCountryDB++
-		v.ID = db.nextIDCountryDB
-		db.countryDBs[v.ID] = v
-	case *HelloDB:
-		db.nextIDHelloDB++
-		v.ID = db.nextIDHelloDB
-		db.helloDBs[v.ID] = v
+	case *BezierCurveDB:
+		db.nextIDBezierCurveDB++
+		v.ID = db.nextIDBezierCurveDB
+		db.beziercurveDBs[v.ID] = v
+	case *BezierSegmentDB:
+		db.nextIDBezierSegmentDB++
+		v.ID = db.nextIDBezierSegmentDB
+		db.beziersegmentDBs[v.ID] = v
+	case *Vector2DB:
+		db.nextIDVector2DB++
+		v.ID = db.nextIDVector2DB
+		db.vector2DBs[v.ID] = v
 	default:
 		return nil, errors.New("github.com/fullstack-lang/gongthree/go, unsupported type in Create")
 	}
@@ -87,10 +97,12 @@ func (db *DBLite) Delete(instanceDB any) (db.DBInterface, error) {
 
 	switch v := instanceDB.(type) {
 	// insertion point delete
-	case *CountryDB:
-		delete(db.countryDBs, v.ID)
-	case *HelloDB:
-		delete(db.helloDBs, v.ID)
+	case *BezierCurveDB:
+		delete(db.beziercurveDBs, v.ID)
+	case *BezierSegmentDB:
+		delete(db.beziersegmentDBs, v.ID)
+	case *Vector2DB:
+		delete(db.vector2DBs, v.ID)
 	default:
 		return nil, errors.New("github.com/fullstack-lang/gongthree/go, unsupported type in Delete")
 	}
@@ -109,11 +121,14 @@ func (db *DBLite) Save(instanceDB any) (db.DBInterface, error) {
 
 	switch v := instanceDB.(type) {
 	// insertion point delete
-	case *CountryDB:
-		db.countryDBs[v.ID] = v
+	case *BezierCurveDB:
+		db.beziercurveDBs[v.ID] = v
 		return db, nil
-	case *HelloDB:
-		db.helloDBs[v.ID] = v
+	case *BezierSegmentDB:
+		db.beziersegmentDBs[v.ID] = v
+		return db, nil
+	case *Vector2DB:
+		db.vector2DBs[v.ID] = v
 		return db, nil
 	default:
 		return nil, errors.New("github.com/fullstack-lang/gongthree/go, Save: unsupported type")
@@ -131,17 +146,23 @@ func (db *DBLite) Updates(instanceDB any) (db.DBInterface, error) {
 
 	switch v := instanceDB.(type) {
 	// insertion point delete
-	case *CountryDB:
-		if existing, ok := db.countryDBs[v.ID]; ok {
+	case *BezierCurveDB:
+		if existing, ok := db.beziercurveDBs[v.ID]; ok {
 			*existing = *v
 		} else {
-			return nil, errors.New("db Country github.com/fullstack-lang/gongthree/go, record not found")
+			return nil, errors.New("db BezierCurve github.com/fullstack-lang/gongthree/go, record not found")
 		}
-	case *HelloDB:
-		if existing, ok := db.helloDBs[v.ID]; ok {
+	case *BezierSegmentDB:
+		if existing, ok := db.beziersegmentDBs[v.ID]; ok {
 			*existing = *v
 		} else {
-			return nil, errors.New("db Hello github.com/fullstack-lang/gongthree/go, record not found")
+			return nil, errors.New("db BezierSegment github.com/fullstack-lang/gongthree/go, record not found")
+		}
+	case *Vector2DB:
+		if existing, ok := db.vector2DBs[v.ID]; ok {
+			*existing = *v
+		} else {
+			return nil, errors.New("db Vector2 github.com/fullstack-lang/gongthree/go, record not found")
 		}
 	default:
 		return nil, errors.New("github.com/fullstack-lang/gongthree/go, unsupported type in Updates")
@@ -157,15 +178,21 @@ func (db *DBLite) Find(instanceDBs any) (db.DBInterface, error) {
 
 	switch ptr := instanceDBs.(type) {
 	// insertion point find
-	case *[]CountryDB:
-		*ptr = make([]CountryDB, 0, len(db.countryDBs))
-		for _, v := range db.countryDBs {
+	case *[]BezierCurveDB:
+		*ptr = make([]BezierCurveDB, 0, len(db.beziercurveDBs))
+		for _, v := range db.beziercurveDBs {
 			*ptr = append(*ptr, *v)
 		}
 		return db, nil
-	case *[]HelloDB:
-		*ptr = make([]HelloDB, 0, len(db.helloDBs))
-		for _, v := range db.helloDBs {
+	case *[]BezierSegmentDB:
+		*ptr = make([]BezierSegmentDB, 0, len(db.beziersegmentDBs))
+		for _, v := range db.beziersegmentDBs {
+			*ptr = append(*ptr, *v)
+		}
+		return db, nil
+	case *[]Vector2DB:
+		*ptr = make([]Vector2DB, 0, len(db.vector2DBs))
+		for _, v := range db.vector2DBs {
 			*ptr = append(*ptr, *v)
 		}
 		return db, nil
@@ -202,25 +229,35 @@ func (db *DBLite) First(instanceDB any, conds ...any) (db.DBInterface, error) {
 
 	switch instanceDB.(type) {
 	// insertion point first
-	case *CountryDB:
-		tmp, ok := db.countryDBs[uint(i)]
+	case *BezierCurveDB:
+		tmp, ok := db.beziercurveDBs[uint(i)]
 
 		if !ok {
-			return nil, errors.New(fmt.Sprintf("db.First Country Unkown entry %d", i))
+			return nil, errors.New(fmt.Sprintf("db.First BezierCurve Unkown entry %d", i))
 		}
 
-		countryDB, _ := instanceDB.(*CountryDB)
-		*countryDB = *tmp
+		beziercurveDB, _ := instanceDB.(*BezierCurveDB)
+		*beziercurveDB = *tmp
 		
-	case *HelloDB:
-		tmp, ok := db.helloDBs[uint(i)]
+	case *BezierSegmentDB:
+		tmp, ok := db.beziersegmentDBs[uint(i)]
 
 		if !ok {
-			return nil, errors.New(fmt.Sprintf("db.First Hello Unkown entry %d", i))
+			return nil, errors.New(fmt.Sprintf("db.First BezierSegment Unkown entry %d", i))
 		}
 
-		helloDB, _ := instanceDB.(*HelloDB)
-		*helloDB = *tmp
+		beziersegmentDB, _ := instanceDB.(*BezierSegmentDB)
+		*beziersegmentDB = *tmp
+		
+	case *Vector2DB:
+		tmp, ok := db.vector2DBs[uint(i)]
+
+		if !ok {
+			return nil, errors.New(fmt.Sprintf("db.First Vector2 Unkown entry %d", i))
+		}
+
+		vector2DB, _ := instanceDB.(*Vector2DB)
+		*vector2DB = *tmp
 		
 	default:
 		return nil, errors.New("github.com/fullstack-lang/gongthree/go, Unkown type")

@@ -1,11 +1,12 @@
 // insertion point for imports
+import { BezierSegmentAPI } from './beziersegment-api'
 
 // usefull for managing pointer ID values that can be nullable
 import { NullInt64 } from './null-int64'
 
-export class HelloAPI {
+export class BezierCurveAPI {
 
-	static GONGSTRUCT_NAME = "Hello"
+	static GONGSTRUCT_NAME = "BezierCurve"
 
 	CreatedAt?: string
 	DeletedAt?: string
@@ -16,9 +17,10 @@ export class HelloAPI {
 
 	// insertion point for other decls
 
-	HelloPointersEncoding: HelloPointersEncoding = new HelloPointersEncoding
+	BezierCurvePointersEncoding: BezierCurvePointersEncoding = new BezierCurvePointersEncoding
 }
 
-export class HelloPointersEncoding {
+export class BezierCurvePointersEncoding {
 	// insertion point for pointers and slices of pointers encoding fields
+	BezierSegments: number[] = []
 }

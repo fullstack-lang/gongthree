@@ -15,13 +15,17 @@ func GetInstanceDBFromInstance[T models.Gongstruct, T2 GongstructDB](
 
 	switch concreteInstance := any(instance).(type) {
 	// insertion point for per struct backup
-	case *models.Country:
-		countryInstance := any(concreteInstance).(*models.Country)
-		ret2 := backRepo.BackRepoCountry.GetCountryDBFromCountryPtr(countryInstance)
+	case *models.BezierCurve:
+		beziercurveInstance := any(concreteInstance).(*models.BezierCurve)
+		ret2 := backRepo.BackRepoBezierCurve.GetBezierCurveDBFromBezierCurvePtr(beziercurveInstance)
 		ret = any(ret2).(*T2)
-	case *models.Hello:
-		helloInstance := any(concreteInstance).(*models.Hello)
-		ret2 := backRepo.BackRepoHello.GetHelloDBFromHelloPtr(helloInstance)
+	case *models.BezierSegment:
+		beziersegmentInstance := any(concreteInstance).(*models.BezierSegment)
+		ret2 := backRepo.BackRepoBezierSegment.GetBezierSegmentDBFromBezierSegmentPtr(beziersegmentInstance)
+		ret = any(ret2).(*T2)
+	case *models.Vector2:
+		vector2Instance := any(concreteInstance).(*models.Vector2)
+		ret2 := backRepo.BackRepoVector2.GetVector2DBFromVector2Ptr(vector2Instance)
 		ret = any(ret2).(*T2)
 	default:
 		_ = concreteInstance
@@ -36,13 +40,18 @@ func GetID[T models.Gongstruct](
 
 	switch inst := any(instance).(type) {
 	// insertion point for per struct backup
-	case *models.Country:
-		tmp := GetInstanceDBFromInstance[models.Country, CountryDB](
+	case *models.BezierCurve:
+		tmp := GetInstanceDBFromInstance[models.BezierCurve, BezierCurveDB](
 			stage, backRepo, inst,
 		)
 		id = int(tmp.ID)
-	case *models.Hello:
-		tmp := GetInstanceDBFromInstance[models.Hello, HelloDB](
+	case *models.BezierSegment:
+		tmp := GetInstanceDBFromInstance[models.BezierSegment, BezierSegmentDB](
+			stage, backRepo, inst,
+		)
+		id = int(tmp.ID)
+	case *models.Vector2:
+		tmp := GetInstanceDBFromInstance[models.Vector2, Vector2DB](
 			stage, backRepo, inst,
 		)
 		id = int(tmp.ID)
@@ -59,13 +68,18 @@ func GetIDPointer[T models.PointerToGongstruct](
 
 	switch inst := any(instance).(type) {
 	// insertion point for per struct backup
-	case *models.Country:
-		tmp := GetInstanceDBFromInstance[models.Country, CountryDB](
+	case *models.BezierCurve:
+		tmp := GetInstanceDBFromInstance[models.BezierCurve, BezierCurveDB](
 			stage, backRepo, inst,
 		)
 		id = int(tmp.ID)
-	case *models.Hello:
-		tmp := GetInstanceDBFromInstance[models.Hello, HelloDB](
+	case *models.BezierSegment:
+		tmp := GetInstanceDBFromInstance[models.BezierSegment, BezierSegmentDB](
+			stage, backRepo, inst,
+		)
+		id = int(tmp.ID)
+	case *models.Vector2:
+		tmp := GetInstanceDBFromInstance[models.Vector2, Vector2DB](
 			stage, backRepo, inst,
 		)
 		id = int(tmp.ID)

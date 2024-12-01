@@ -14,16 +14,16 @@ import (
 )
 
 // declaration in order to justify use of the models import
-var __Country__dummysDeclaration__ models.Country
-var __Country_time__dummyDeclaration time.Duration
+var __BezierCurve__dummysDeclaration__ models.BezierCurve
+var __BezierCurve_time__dummyDeclaration time.Duration
 
-var mutexCountry sync.Mutex
+var mutexBezierCurve sync.Mutex
 
-// An CountryID parameter model.
+// An BezierCurveID parameter model.
 //
 // This is used for operations that want the ID of an order in the path
-// swagger:parameters getCountry updateCountry deleteCountry
-type CountryID struct {
+// swagger:parameters getBezierCurve updateBezierCurve deleteBezierCurve
+type BezierCurveID struct {
 	// The ID of the order
 	//
 	// in: path
@@ -31,29 +31,29 @@ type CountryID struct {
 	ID int64
 }
 
-// CountryInput is a schema that can validate the user’s
+// BezierCurveInput is a schema that can validate the user’s
 // input to prevent us from getting invalid data
-// swagger:parameters postCountry updateCountry
-type CountryInput struct {
-	// The Country to submit or modify
+// swagger:parameters postBezierCurve updateBezierCurve
+type BezierCurveInput struct {
+	// The BezierCurve to submit or modify
 	// in: body
-	Country *orm.CountryAPI
+	BezierCurve *orm.BezierCurveAPI
 }
 
-// GetCountrys
+// GetBezierCurves
 //
-// swagger:route GET /countrys countrys getCountrys
+// swagger:route GET /beziercurves beziercurves getBezierCurves
 //
-// # Get all countrys
+// # Get all beziercurves
 //
 // Responses:
 // default: genericError
 //
-//	200: countryDBResponse
-func (controller *Controller) GetCountrys(c *gin.Context) {
+//	200: beziercurveDBResponse
+func (controller *Controller) GetBezierCurves(c *gin.Context) {
 
 	// source slice
-	var countryDBs []orm.CountryDB
+	var beziercurveDBs []orm.BezierCurveDB
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -61,16 +61,16 @@ func (controller *Controller) GetCountrys(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("GetCountrys", "GONG__StackPath", stackPath)
+			// log.Println("GetBezierCurves", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoCountry.GetDB()
+	db := backRepo.BackRepoBezierCurve.GetDB()
 
-	_, err := db.Find(&countryDBs)
+	_, err := db.Find(&beziercurveDBs)
 	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -81,29 +81,29 @@ func (controller *Controller) GetCountrys(c *gin.Context) {
 	}
 
 	// slice that will be transmitted to the front
-	countryAPIs := make([]orm.CountryAPI, 0)
+	beziercurveAPIs := make([]orm.BezierCurveAPI, 0)
 
-	// for each country, update fields from the database nullable fields
-	for idx := range countryDBs {
-		countryDB := &countryDBs[idx]
-		_ = countryDB
-		var countryAPI orm.CountryAPI
+	// for each beziercurve, update fields from the database nullable fields
+	for idx := range beziercurveDBs {
+		beziercurveDB := &beziercurveDBs[idx]
+		_ = beziercurveDB
+		var beziercurveAPI orm.BezierCurveAPI
 
 		// insertion point for updating fields
-		countryAPI.ID = countryDB.ID
-		countryDB.CopyBasicFieldsToCountry_WOP(&countryAPI.Country_WOP)
-		countryAPI.CountryPointersEncoding = countryDB.CountryPointersEncoding
-		countryAPIs = append(countryAPIs, countryAPI)
+		beziercurveAPI.ID = beziercurveDB.ID
+		beziercurveDB.CopyBasicFieldsToBezierCurve_WOP(&beziercurveAPI.BezierCurve_WOP)
+		beziercurveAPI.BezierCurvePointersEncoding = beziercurveDB.BezierCurvePointersEncoding
+		beziercurveAPIs = append(beziercurveAPIs, beziercurveAPI)
 	}
 
-	c.JSON(http.StatusOK, countryAPIs)
+	c.JSON(http.StatusOK, beziercurveAPIs)
 }
 
-// PostCountry
+// PostBezierCurve
 //
-// swagger:route POST /countrys countrys postCountry
+// swagger:route POST /beziercurves beziercurves postBezierCurve
 //
-// Creates a country
+// Creates a beziercurve
 //
 //	Consumes:
 //	- application/json
@@ -113,10 +113,10 @@ func (controller *Controller) GetCountrys(c *gin.Context) {
 //
 //	Responses:
 //	  200: nodeDBResponse
-func (controller *Controller) PostCountry(c *gin.Context) {
+func (controller *Controller) PostBezierCurve(c *gin.Context) {
 
-	mutexCountry.Lock()
-	defer mutexCountry.Unlock()
+	mutexBezierCurve.Lock()
+	defer mutexBezierCurve.Unlock()
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -124,17 +124,17 @@ func (controller *Controller) PostCountry(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("PostCountrys", "GONG__StackPath", stackPath)
+			// log.Println("PostBezierCurves", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoCountry.GetDB()
+	db := backRepo.BackRepoBezierCurve.GetDB()
 
 	// Validate input
-	var input orm.CountryAPI
+	var input orm.BezierCurveAPI
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -146,12 +146,12 @@ func (controller *Controller) PostCountry(c *gin.Context) {
 		return
 	}
 
-	// Create country
-	countryDB := orm.CountryDB{}
-	countryDB.CountryPointersEncoding = input.CountryPointersEncoding
-	countryDB.CopyBasicFieldsFromCountry_WOP(&input.Country_WOP)
+	// Create beziercurve
+	beziercurveDB := orm.BezierCurveDB{}
+	beziercurveDB.BezierCurvePointersEncoding = input.BezierCurvePointersEncoding
+	beziercurveDB.CopyBasicFieldsFromBezierCurve_WOP(&input.BezierCurve_WOP)
 
-	_, err = db.Create(&countryDB)
+	_, err = db.Create(&beziercurveDB)
 	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -162,31 +162,31 @@ func (controller *Controller) PostCountry(c *gin.Context) {
 	}
 
 	// get an instance (not staged) from DB instance, and call callback function
-	backRepo.BackRepoCountry.CheckoutPhaseOneInstance(&countryDB)
-	country := backRepo.BackRepoCountry.Map_CountryDBID_CountryPtr[countryDB.ID]
+	backRepo.BackRepoBezierCurve.CheckoutPhaseOneInstance(&beziercurveDB)
+	beziercurve := backRepo.BackRepoBezierCurve.Map_BezierCurveDBID_BezierCurvePtr[beziercurveDB.ID]
 
-	if country != nil {
-		models.AfterCreateFromFront(backRepo.GetStage(), country)
+	if beziercurve != nil {
+		models.AfterCreateFromFront(backRepo.GetStage(), beziercurve)
 	}
 
 	// a POST is equivalent to a back repo commit increase
 	// (this will be improved with implementation of unit of work design pattern)
 	backRepo.IncrementPushFromFrontNb()
 
-	c.JSON(http.StatusOK, countryDB)
+	c.JSON(http.StatusOK, beziercurveDB)
 }
 
-// GetCountry
+// GetBezierCurve
 //
-// swagger:route GET /countrys/{ID} countrys getCountry
+// swagger:route GET /beziercurves/{ID} beziercurves getBezierCurve
 //
-// Gets the details for a country.
+// Gets the details for a beziercurve.
 //
 // Responses:
 // default: genericError
 //
-//	200: countryDBResponse
-func (controller *Controller) GetCountry(c *gin.Context) {
+//	200: beziercurveDBResponse
+func (controller *Controller) GetBezierCurve(c *gin.Context) {
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -194,18 +194,18 @@ func (controller *Controller) GetCountry(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("GetCountry", "GONG__StackPath", stackPath)
+			// log.Println("GetBezierCurve", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoCountry.GetDB()
+	db := backRepo.BackRepoBezierCurve.GetDB()
 
-	// Get countryDB in DB
-	var countryDB orm.CountryDB
-	if _, err := db.First(&countryDB, c.Param("id")); err != nil {
+	// Get beziercurveDB in DB
+	var beziercurveDB orm.BezierCurveDB
+	if _, err := db.First(&beziercurveDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -214,28 +214,28 @@ func (controller *Controller) GetCountry(c *gin.Context) {
 		return
 	}
 
-	var countryAPI orm.CountryAPI
-	countryAPI.ID = countryDB.ID
-	countryAPI.CountryPointersEncoding = countryDB.CountryPointersEncoding
-	countryDB.CopyBasicFieldsToCountry_WOP(&countryAPI.Country_WOP)
+	var beziercurveAPI orm.BezierCurveAPI
+	beziercurveAPI.ID = beziercurveDB.ID
+	beziercurveAPI.BezierCurvePointersEncoding = beziercurveDB.BezierCurvePointersEncoding
+	beziercurveDB.CopyBasicFieldsToBezierCurve_WOP(&beziercurveAPI.BezierCurve_WOP)
 
-	c.JSON(http.StatusOK, countryAPI)
+	c.JSON(http.StatusOK, beziercurveAPI)
 }
 
-// UpdateCountry
+// UpdateBezierCurve
 //
-// swagger:route PATCH /countrys/{ID} countrys updateCountry
+// swagger:route PATCH /beziercurves/{ID} beziercurves updateBezierCurve
 //
-// # Update a country
+// # Update a beziercurve
 //
 // Responses:
 // default: genericError
 //
-//	200: countryDBResponse
-func (controller *Controller) UpdateCountry(c *gin.Context) {
+//	200: beziercurveDBResponse
+func (controller *Controller) UpdateBezierCurve(c *gin.Context) {
 
-	mutexCountry.Lock()
-	defer mutexCountry.Unlock()
+	mutexBezierCurve.Lock()
+	defer mutexBezierCurve.Unlock()
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -243,17 +243,17 @@ func (controller *Controller) UpdateCountry(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("UpdateCountry", "GONG__StackPath", stackPath)
+			// log.Println("UpdateBezierCurve", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoCountry.GetDB()
+	db := backRepo.BackRepoBezierCurve.GetDB()
 
 	// Validate input
-	var input orm.CountryAPI
+	var input orm.BezierCurveAPI
 	if err := c.ShouldBindJSON(&input); err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -261,10 +261,10 @@ func (controller *Controller) UpdateCountry(c *gin.Context) {
 	}
 
 	// Get model if exist
-	var countryDB orm.CountryDB
+	var beziercurveDB orm.BezierCurveDB
 
-	// fetch the country
-	_, err := db.First(&countryDB, c.Param("id"))
+	// fetch the beziercurve
+	_, err := db.First(&beziercurveDB, c.Param("id"))
 
 	if err != nil {
 		var returnError GenericError
@@ -276,11 +276,11 @@ func (controller *Controller) UpdateCountry(c *gin.Context) {
 	}
 
 	// update
-	countryDB.CopyBasicFieldsFromCountry_WOP(&input.Country_WOP)
-	countryDB.CountryPointersEncoding = input.CountryPointersEncoding
+	beziercurveDB.CopyBasicFieldsFromBezierCurve_WOP(&input.BezierCurve_WOP)
+	beziercurveDB.BezierCurvePointersEncoding = input.BezierCurvePointersEncoding
 
-	db, _ = db.Model(&countryDB)
-	_, err = db.Updates(&countryDB)
+	db, _ = db.Model(&beziercurveDB)
+	_, err = db.Updates(&beziercurveDB)
 	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -291,16 +291,16 @@ func (controller *Controller) UpdateCountry(c *gin.Context) {
 	}
 
 	// get an instance (not staged) from DB instance, and call callback function
-	countryNew := new(models.Country)
-	countryDB.CopyBasicFieldsToCountry(countryNew)
+	beziercurveNew := new(models.BezierCurve)
+	beziercurveDB.CopyBasicFieldsToBezierCurve(beziercurveNew)
 
 	// redeem pointers
-	countryDB.DecodePointers(backRepo, countryNew)
+	beziercurveDB.DecodePointers(backRepo, beziercurveNew)
 
 	// get stage instance from DB instance, and call callback function
-	countryOld := backRepo.BackRepoCountry.Map_CountryDBID_CountryPtr[countryDB.ID]
-	if countryOld != nil {
-		models.AfterUpdateFromFront(backRepo.GetStage(), countryOld, countryNew)
+	beziercurveOld := backRepo.BackRepoBezierCurve.Map_BezierCurveDBID_BezierCurvePtr[beziercurveDB.ID]
+	if beziercurveOld != nil {
+		models.AfterUpdateFromFront(backRepo.GetStage(), beziercurveOld, beziercurveNew)
 	}
 
 	// an UPDATE generates a back repo commit increase
@@ -309,23 +309,23 @@ func (controller *Controller) UpdateCountry(c *gin.Context) {
 	// generates a checkout
 	backRepo.IncrementPushFromFrontNb()
 
-	// return status OK with the marshalling of the the countryDB
-	c.JSON(http.StatusOK, countryDB)
+	// return status OK with the marshalling of the the beziercurveDB
+	c.JSON(http.StatusOK, beziercurveDB)
 }
 
-// DeleteCountry
+// DeleteBezierCurve
 //
-// swagger:route DELETE /countrys/{ID} countrys deleteCountry
+// swagger:route DELETE /beziercurves/{ID} beziercurves deleteBezierCurve
 //
-// # Delete a country
+// # Delete a beziercurve
 //
 // default: genericError
 //
-//	200: countryDBResponse
-func (controller *Controller) DeleteCountry(c *gin.Context) {
+//	200: beziercurveDBResponse
+func (controller *Controller) DeleteBezierCurve(c *gin.Context) {
 
-	mutexCountry.Lock()
-	defer mutexCountry.Unlock()
+	mutexBezierCurve.Lock()
+	defer mutexBezierCurve.Unlock()
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -333,18 +333,18 @@ func (controller *Controller) DeleteCountry(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("DeleteCountry", "GONG__StackPath", stackPath)
+			// log.Println("DeleteBezierCurve", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoCountry.GetDB()
+	db := backRepo.BackRepoBezierCurve.GetDB()
 
 	// Get model if exist
-	var countryDB orm.CountryDB
-	if _, err := db.First(&countryDB, c.Param("id")); err != nil {
+	var beziercurveDB orm.BezierCurveDB
+	if _, err := db.First(&beziercurveDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -355,16 +355,16 @@ func (controller *Controller) DeleteCountry(c *gin.Context) {
 
 	// with gorm.Model field, default delete is a soft delete. Unscoped() force delete
 	db.Unscoped()
-	db.Delete(&countryDB)
+	db.Delete(&beziercurveDB)
 
 	// get an instance (not staged) from DB instance, and call callback function
-	countryDeleted := new(models.Country)
-	countryDB.CopyBasicFieldsToCountry(countryDeleted)
+	beziercurveDeleted := new(models.BezierCurve)
+	beziercurveDB.CopyBasicFieldsToBezierCurve(beziercurveDeleted)
 
 	// get stage instance from DB instance, and call callback function
-	countryStaged := backRepo.BackRepoCountry.Map_CountryDBID_CountryPtr[countryDB.ID]
-	if countryStaged != nil {
-		models.AfterDeleteFromFront(backRepo.GetStage(), countryStaged, countryDeleted)
+	beziercurveStaged := backRepo.BackRepoBezierCurve.Map_BezierCurveDBID_BezierCurvePtr[beziercurveDB.ID]
+	if beziercurveStaged != nil {
+		models.AfterDeleteFromFront(backRepo.GetStage(), beziercurveStaged, beziercurveDeleted)
 	}
 
 	// a DELETE generates a back repo commit increase

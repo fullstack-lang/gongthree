@@ -6,13 +6,17 @@ func AfterCreateFromFront[Type Gongstruct](stage *StageStruct, instance *Type) {
 
 	switch target := any(instance).(type) {
 	// insertion point
-	case *Country:
-		if stage.OnAfterCountryCreateCallback != nil {
-			stage.OnAfterCountryCreateCallback.OnAfterCreate(stage, target)
+	case *BezierCurve:
+		if stage.OnAfterBezierCurveCreateCallback != nil {
+			stage.OnAfterBezierCurveCreateCallback.OnAfterCreate(stage, target)
 		}
-	case *Hello:
-		if stage.OnAfterHelloCreateCallback != nil {
-			stage.OnAfterHelloCreateCallback.OnAfterCreate(stage, target)
+	case *BezierSegment:
+		if stage.OnAfterBezierSegmentCreateCallback != nil {
+			stage.OnAfterBezierSegmentCreateCallback.OnAfterCreate(stage, target)
+		}
+	case *Vector2:
+		if stage.OnAfterVector2CreateCallback != nil {
+			stage.OnAfterVector2CreateCallback.OnAfterCreate(stage, target)
 		}
 	default:
 		_ = target
@@ -24,15 +28,20 @@ func AfterUpdateFromFront[Type Gongstruct](stage *StageStruct, old, new *Type) {
 
 	switch oldTarget := any(old).(type) {
 	// insertion point
-	case *Country:
-		newTarget := any(new).(*Country)
-		if stage.OnAfterCountryUpdateCallback != nil {
-			stage.OnAfterCountryUpdateCallback.OnAfterUpdate(stage, oldTarget, newTarget)
+	case *BezierCurve:
+		newTarget := any(new).(*BezierCurve)
+		if stage.OnAfterBezierCurveUpdateCallback != nil {
+			stage.OnAfterBezierCurveUpdateCallback.OnAfterUpdate(stage, oldTarget, newTarget)
 		}
-	case *Hello:
-		newTarget := any(new).(*Hello)
-		if stage.OnAfterHelloUpdateCallback != nil {
-			stage.OnAfterHelloUpdateCallback.OnAfterUpdate(stage, oldTarget, newTarget)
+	case *BezierSegment:
+		newTarget := any(new).(*BezierSegment)
+		if stage.OnAfterBezierSegmentUpdateCallback != nil {
+			stage.OnAfterBezierSegmentUpdateCallback.OnAfterUpdate(stage, oldTarget, newTarget)
+		}
+	case *Vector2:
+		newTarget := any(new).(*Vector2)
+		if stage.OnAfterVector2UpdateCallback != nil {
+			stage.OnAfterVector2UpdateCallback.OnAfterUpdate(stage, oldTarget, newTarget)
 		}
 	default:
 		_ = oldTarget
@@ -44,15 +53,20 @@ func AfterDeleteFromFront[Type Gongstruct](stage *StageStruct, staged, front *Ty
 
 	switch front := any(front).(type) {
 	// insertion point
-	case *Country:
-		if stage.OnAfterCountryDeleteCallback != nil {
-			staged := any(staged).(*Country)
-			stage.OnAfterCountryDeleteCallback.OnAfterDelete(stage, staged, front)
+	case *BezierCurve:
+		if stage.OnAfterBezierCurveDeleteCallback != nil {
+			staged := any(staged).(*BezierCurve)
+			stage.OnAfterBezierCurveDeleteCallback.OnAfterDelete(stage, staged, front)
 		}
-	case *Hello:
-		if stage.OnAfterHelloDeleteCallback != nil {
-			staged := any(staged).(*Hello)
-			stage.OnAfterHelloDeleteCallback.OnAfterDelete(stage, staged, front)
+	case *BezierSegment:
+		if stage.OnAfterBezierSegmentDeleteCallback != nil {
+			staged := any(staged).(*BezierSegment)
+			stage.OnAfterBezierSegmentDeleteCallback.OnAfterDelete(stage, staged, front)
+		}
+	case *Vector2:
+		if stage.OnAfterVector2DeleteCallback != nil {
+			staged := any(staged).(*Vector2)
+			stage.OnAfterVector2DeleteCallback.OnAfterDelete(stage, staged, front)
 		}
 	default:
 		_ = front
@@ -64,13 +78,17 @@ func AfterReadFromFront[Type Gongstruct](stage *StageStruct, instance *Type) {
 
 	switch target := any(instance).(type) {
 	// insertion point
-	case *Country:
-		if stage.OnAfterCountryReadCallback != nil {
-			stage.OnAfterCountryReadCallback.OnAfterRead(stage, target)
+	case *BezierCurve:
+		if stage.OnAfterBezierCurveReadCallback != nil {
+			stage.OnAfterBezierCurveReadCallback.OnAfterRead(stage, target)
 		}
-	case *Hello:
-		if stage.OnAfterHelloReadCallback != nil {
-			stage.OnAfterHelloReadCallback.OnAfterRead(stage, target)
+	case *BezierSegment:
+		if stage.OnAfterBezierSegmentReadCallback != nil {
+			stage.OnAfterBezierSegmentReadCallback.OnAfterRead(stage, target)
+		}
+	case *Vector2:
+		if stage.OnAfterVector2ReadCallback != nil {
+			stage.OnAfterVector2ReadCallback.OnAfterRead(stage, target)
 		}
 	default:
 		_ = target
@@ -83,11 +101,14 @@ func SetCallbackAfterUpdateFromFront[Type Gongstruct](stage *StageStruct, callba
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Country:
-		stage.OnAfterCountryUpdateCallback = any(callback).(OnAfterUpdateInterface[Country])
+	case *BezierCurve:
+		stage.OnAfterBezierCurveUpdateCallback = any(callback).(OnAfterUpdateInterface[BezierCurve])
 	
-	case *Hello:
-		stage.OnAfterHelloUpdateCallback = any(callback).(OnAfterUpdateInterface[Hello])
+	case *BezierSegment:
+		stage.OnAfterBezierSegmentUpdateCallback = any(callback).(OnAfterUpdateInterface[BezierSegment])
+	
+	case *Vector2:
+		stage.OnAfterVector2UpdateCallback = any(callback).(OnAfterUpdateInterface[Vector2])
 	
 	}
 }
@@ -96,11 +117,14 @@ func SetCallbackAfterCreateFromFront[Type Gongstruct](stage *StageStruct, callba
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Country:
-		stage.OnAfterCountryCreateCallback = any(callback).(OnAfterCreateInterface[Country])
+	case *BezierCurve:
+		stage.OnAfterBezierCurveCreateCallback = any(callback).(OnAfterCreateInterface[BezierCurve])
 	
-	case *Hello:
-		stage.OnAfterHelloCreateCallback = any(callback).(OnAfterCreateInterface[Hello])
+	case *BezierSegment:
+		stage.OnAfterBezierSegmentCreateCallback = any(callback).(OnAfterCreateInterface[BezierSegment])
+	
+	case *Vector2:
+		stage.OnAfterVector2CreateCallback = any(callback).(OnAfterCreateInterface[Vector2])
 	
 	}
 }
@@ -109,11 +133,14 @@ func SetCallbackAfterDeleteFromFront[Type Gongstruct](stage *StageStruct, callba
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Country:
-		stage.OnAfterCountryDeleteCallback = any(callback).(OnAfterDeleteInterface[Country])
+	case *BezierCurve:
+		stage.OnAfterBezierCurveDeleteCallback = any(callback).(OnAfterDeleteInterface[BezierCurve])
 	
-	case *Hello:
-		stage.OnAfterHelloDeleteCallback = any(callback).(OnAfterDeleteInterface[Hello])
+	case *BezierSegment:
+		stage.OnAfterBezierSegmentDeleteCallback = any(callback).(OnAfterDeleteInterface[BezierSegment])
+	
+	case *Vector2:
+		stage.OnAfterVector2DeleteCallback = any(callback).(OnAfterDeleteInterface[Vector2])
 	
 	}
 }
@@ -122,11 +149,14 @@ func SetCallbackAfterReadFromFront[Type Gongstruct](stage *StageStruct, callback
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Country:
-		stage.OnAfterCountryReadCallback = any(callback).(OnAfterReadInterface[Country])
+	case *BezierCurve:
+		stage.OnAfterBezierCurveReadCallback = any(callback).(OnAfterReadInterface[BezierCurve])
 	
-	case *Hello:
-		stage.OnAfterHelloReadCallback = any(callback).(OnAfterReadInterface[Hello])
+	case *BezierSegment:
+		stage.OnAfterBezierSegmentReadCallback = any(callback).(OnAfterReadInterface[BezierSegment])
+	
+	case *Vector2:
+		stage.OnAfterVector2ReadCallback = any(callback).(OnAfterReadInterface[Vector2])
 	
 	}
 }

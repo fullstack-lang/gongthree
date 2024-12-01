@@ -4,13 +4,17 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Observable, combineLatest, BehaviorSubject, of } from 'rxjs'
 
 // insertion point sub template for services imports
-import { CountryAPI } from './country-api'
-import { Country, CopyCountryAPIToCountry } from './country'
-import { CountryService } from './country.service'
+import { BezierCurveAPI } from './beziercurve-api'
+import { BezierCurve, CopyBezierCurveAPIToBezierCurve } from './beziercurve'
+import { BezierCurveService } from './beziercurve.service'
 
-import { HelloAPI } from './hello-api'
-import { Hello, CopyHelloAPIToHello } from './hello'
-import { HelloService } from './hello.service'
+import { BezierSegmentAPI } from './beziersegment-api'
+import { BezierSegment, CopyBezierSegmentAPIToBezierSegment } from './beziersegment'
+import { BezierSegmentService } from './beziersegment.service'
+
+import { Vector2API } from './vector2-api'
+import { Vector2, CopyVector2APIToVector2 } from './vector2'
+import { Vector2Service } from './vector2.service'
 
 
 import { BackRepoData } from './back-repo-data'
@@ -19,11 +23,14 @@ export const StackType = "github.com/fullstack-lang/gongthree/go/models"
 
 // FrontRepo stores all instances in a front repository (design pattern repository)
 export class FrontRepo { // insertion point sub template
-	array_Countrys = new Array<Country>() // array of front instances
-	map_ID_Country = new Map<number, Country>() // map of front instances
+	array_BezierCurves = new Array<BezierCurve>() // array of front instances
+	map_ID_BezierCurve = new Map<number, BezierCurve>() // map of front instances
 
-	array_Hellos = new Array<Hello>() // array of front instances
-	map_ID_Hello = new Map<number, Hello>() // map of front instances
+	array_BezierSegments = new Array<BezierSegment>() // array of front instances
+	map_ID_BezierSegment = new Map<number, BezierSegment>() // map of front instances
+
+	array_Vector2s = new Array<Vector2>() // array of front instances
+	map_ID_Vector2 = new Map<number, Vector2>() // map of front instances
 
 
 	// getFrontArray allows for a get function that is robust to refactoring of the named struct name
@@ -32,10 +39,12 @@ export class FrontRepo { // insertion point sub template
 	getFrontArray<Type>(gongStructName: string): Array<Type> {
 		switch (gongStructName) {
 			// insertion point
-			case 'Country':
-				return this.array_Countrys as unknown as Array<Type>
-			case 'Hello':
-				return this.array_Hellos as unknown as Array<Type>
+			case 'BezierCurve':
+				return this.array_BezierCurves as unknown as Array<Type>
+			case 'BezierSegment':
+				return this.array_BezierSegments as unknown as Array<Type>
+			case 'Vector2':
+				return this.array_Vector2s as unknown as Array<Type>
 			default:
 				throw new Error("Type not recognized");
 		}
@@ -44,10 +53,12 @@ export class FrontRepo { // insertion point sub template
 	getFrontMap<Type>(gongStructName: string): Map<number, Type> {
 		switch (gongStructName) {
 			// insertion point
-			case 'Country':
-				return this.map_ID_Country as unknown as Map<number, Type>
-			case 'Hello':
-				return this.map_ID_Hello as unknown as Map<number, Type>
+			case 'BezierCurve':
+				return this.map_ID_BezierCurve as unknown as Map<number, Type>
+			case 'BezierSegment':
+				return this.map_ID_BezierSegment as unknown as Map<number, Type>
+			case 'Vector2':
+				return this.map_ID_Vector2 as unknown as Map<number, Type>
 			default:
 				throw new Error("Type not recognized");
 		}
@@ -115,8 +126,9 @@ export class FrontRepoService {
 
 	constructor(
 		private http: HttpClient, // insertion point sub template 
-		private countryService: CountryService,
-		private helloService: HelloService,
+		private beziercurveService: BezierCurveService,
+		private beziersegmentService: BezierSegmentService,
+		private vector2Service: Vector2Service,
 	) { }
 
 	// postService provides a post function for each struct name
@@ -149,8 +161,9 @@ export class FrontRepoService {
 	observableFrontRepo: [
 		Observable<null>, // see below for the of(null) observable
 		// insertion point sub template 
-		Observable<CountryAPI[]>,
-		Observable<HelloAPI[]>,
+		Observable<BezierCurveAPI[]>,
+		Observable<BezierSegmentAPI[]>,
+		Observable<Vector2API[]>,
 	] = [
 			// Using "combineLatest" with a placeholder observable.
 			//
@@ -161,8 +174,9 @@ export class FrontRepoService {
 			// expectation for a non-empty array of observables.
 			of(null), // 
 			// insertion point sub template
-			this.countryService.getCountrys(this.GONG__StackPath, this.frontRepo),
-			this.helloService.getHellos(this.GONG__StackPath, this.frontRepo),
+			this.beziercurveService.getBezierCurves(this.GONG__StackPath, this.frontRepo),
+			this.beziersegmentService.getBezierSegments(this.GONG__StackPath, this.frontRepo),
+			this.vector2Service.getVector2s(this.GONG__StackPath, this.frontRepo),
 		];
 
 	//
@@ -178,8 +192,9 @@ export class FrontRepoService {
 		this.observableFrontRepo = [
 			of(null), // see above for justification
 			// insertion point sub template
-			this.countryService.getCountrys(this.GONG__StackPath, this.frontRepo),
-			this.helloService.getHellos(this.GONG__StackPath, this.frontRepo),
+			this.beziercurveService.getBezierCurves(this.GONG__StackPath, this.frontRepo),
+			this.beziersegmentService.getBezierSegments(this.GONG__StackPath, this.frontRepo),
+			this.vector2Service.getVector2s(this.GONG__StackPath, this.frontRepo),
 		]
 
 		return new Observable<FrontRepo>(
@@ -190,41 +205,56 @@ export class FrontRepoService {
 					([
 						___of_null, // see above for the explanation about of
 						// insertion point sub template for declarations 
-						countrys_,
-						hellos_,
+						beziercurves_,
+						beziersegments_,
+						vector2s_,
 					]) => {
 						let _this = this
 						// Typing can be messy with many items. Therefore, type casting is necessary here
 						// insertion point sub template for type casting 
-						var countrys: CountryAPI[]
-						countrys = countrys_ as CountryAPI[]
-						var hellos: HelloAPI[]
-						hellos = hellos_ as HelloAPI[]
+						var beziercurves: BezierCurveAPI[]
+						beziercurves = beziercurves_ as BezierCurveAPI[]
+						var beziersegments: BezierSegmentAPI[]
+						beziersegments = beziersegments_ as BezierSegmentAPI[]
+						var vector2s: Vector2API[]
+						vector2s = vector2s_ as Vector2API[]
 
 						// 
 						// First Step: init map of instances
 						// insertion point sub template for init 
 						// init the arrays
-						this.frontRepo.array_Countrys = []
-						this.frontRepo.map_ID_Country.clear()
+						this.frontRepo.array_BezierCurves = []
+						this.frontRepo.map_ID_BezierCurve.clear()
 
-						countrys.forEach(
-							countryAPI => {
-								let country = new Country
-								this.frontRepo.array_Countrys.push(country)
-								this.frontRepo.map_ID_Country.set(countryAPI.ID, country)
+						beziercurves.forEach(
+							beziercurveAPI => {
+								let beziercurve = new BezierCurve
+								this.frontRepo.array_BezierCurves.push(beziercurve)
+								this.frontRepo.map_ID_BezierCurve.set(beziercurveAPI.ID, beziercurve)
 							}
 						)
 
 						// init the arrays
-						this.frontRepo.array_Hellos = []
-						this.frontRepo.map_ID_Hello.clear()
+						this.frontRepo.array_BezierSegments = []
+						this.frontRepo.map_ID_BezierSegment.clear()
 
-						hellos.forEach(
-							helloAPI => {
-								let hello = new Hello
-								this.frontRepo.array_Hellos.push(hello)
-								this.frontRepo.map_ID_Hello.set(helloAPI.ID, hello)
+						beziersegments.forEach(
+							beziersegmentAPI => {
+								let beziersegment = new BezierSegment
+								this.frontRepo.array_BezierSegments.push(beziersegment)
+								this.frontRepo.map_ID_BezierSegment.set(beziersegmentAPI.ID, beziersegment)
+							}
+						)
+
+						// init the arrays
+						this.frontRepo.array_Vector2s = []
+						this.frontRepo.map_ID_Vector2.clear()
+
+						vector2s.forEach(
+							vector2API => {
+								let vector2 = new Vector2
+								this.frontRepo.array_Vector2s.push(vector2)
+								this.frontRepo.map_ID_Vector2.set(vector2API.ID, vector2)
 							}
 						)
 
@@ -233,18 +263,26 @@ export class FrontRepoService {
 						// Second Step: reddeem front objects
 						// insertion point sub template for redeem 
 						// fill up front objects
-						countrys.forEach(
-							countryAPI => {
-								let country = this.frontRepo.map_ID_Country.get(countryAPI.ID)
-								CopyCountryAPIToCountry(countryAPI, country!, this.frontRepo)
+						beziercurves.forEach(
+							beziercurveAPI => {
+								let beziercurve = this.frontRepo.map_ID_BezierCurve.get(beziercurveAPI.ID)
+								CopyBezierCurveAPIToBezierCurve(beziercurveAPI, beziercurve!, this.frontRepo)
 							}
 						)
 
 						// fill up front objects
-						hellos.forEach(
-							helloAPI => {
-								let hello = this.frontRepo.map_ID_Hello.get(helloAPI.ID)
-								CopyHelloAPIToHello(helloAPI, hello!, this.frontRepo)
+						beziersegments.forEach(
+							beziersegmentAPI => {
+								let beziersegment = this.frontRepo.map_ID_BezierSegment.get(beziersegmentAPI.ID)
+								CopyBezierSegmentAPIToBezierSegment(beziersegmentAPI, beziersegment!, this.frontRepo)
+							}
+						)
+
+						// fill up front objects
+						vector2s.forEach(
+							vector2API => {
+								let vector2 = this.frontRepo.map_ID_Vector2.get(vector2API.ID)
+								CopyVector2APIToVector2(vector2API, vector2!, this.frontRepo)
 							}
 						)
 
@@ -282,26 +320,38 @@ export class FrontRepoService {
 				// init the arrays
 				// insertion point sub template for init 
 				// init the arrays
-				frontRepo.array_Countrys = []
-				frontRepo.map_ID_Country.clear()
+				frontRepo.array_BezierCurves = []
+				frontRepo.map_ID_BezierCurve.clear()
 
-				backRepoData.CountryAPIs.forEach(
-					countryAPI => {
-						let country = new Country
-						frontRepo.array_Countrys.push(country)
-						frontRepo.map_ID_Country.set(countryAPI.ID, country)
+				backRepoData.BezierCurveAPIs.forEach(
+					beziercurveAPI => {
+						let beziercurve = new BezierCurve
+						frontRepo.array_BezierCurves.push(beziercurve)
+						frontRepo.map_ID_BezierCurve.set(beziercurveAPI.ID, beziercurve)
 					}
 				)
 
 				// init the arrays
-				frontRepo.array_Hellos = []
-				frontRepo.map_ID_Hello.clear()
+				frontRepo.array_BezierSegments = []
+				frontRepo.map_ID_BezierSegment.clear()
 
-				backRepoData.HelloAPIs.forEach(
-					helloAPI => {
-						let hello = new Hello
-						frontRepo.array_Hellos.push(hello)
-						frontRepo.map_ID_Hello.set(helloAPI.ID, hello)
+				backRepoData.BezierSegmentAPIs.forEach(
+					beziersegmentAPI => {
+						let beziersegment = new BezierSegment
+						frontRepo.array_BezierSegments.push(beziersegment)
+						frontRepo.map_ID_BezierSegment.set(beziersegmentAPI.ID, beziersegment)
+					}
+				)
+
+				// init the arrays
+				frontRepo.array_Vector2s = []
+				frontRepo.map_ID_Vector2.clear()
+
+				backRepoData.Vector2APIs.forEach(
+					vector2API => {
+						let vector2 = new Vector2
+						frontRepo.array_Vector2s.push(vector2)
+						frontRepo.map_ID_Vector2.set(vector2API.ID, vector2)
 					}
 				)
 
@@ -312,18 +362,26 @@ export class FrontRepoService {
 				// fill up front objects
 				// insertion point sub template for redeem 
 				// fill up front objects
-				backRepoData.CountryAPIs.forEach(
-					countryAPI => {
-						let country = frontRepo.map_ID_Country.get(countryAPI.ID)
-						CopyCountryAPIToCountry(countryAPI, country!, frontRepo)
+				backRepoData.BezierCurveAPIs.forEach(
+					beziercurveAPI => {
+						let beziercurve = frontRepo.map_ID_BezierCurve.get(beziercurveAPI.ID)
+						CopyBezierCurveAPIToBezierCurve(beziercurveAPI, beziercurve!, frontRepo)
 					}
 				)
 
 				// fill up front objects
-				backRepoData.HelloAPIs.forEach(
-					helloAPI => {
-						let hello = frontRepo.map_ID_Hello.get(helloAPI.ID)
-						CopyHelloAPIToHello(helloAPI, hello!, frontRepo)
+				backRepoData.BezierSegmentAPIs.forEach(
+					beziersegmentAPI => {
+						let beziersegment = frontRepo.map_ID_BezierSegment.get(beziersegmentAPI.ID)
+						CopyBezierSegmentAPIToBezierSegment(beziersegmentAPI, beziersegment!, frontRepo)
+					}
+				)
+
+				// fill up front objects
+				backRepoData.Vector2APIs.forEach(
+					vector2API => {
+						let vector2 = frontRepo.map_ID_Vector2.get(vector2API.ID)
+						CopyVector2APIToVector2(vector2API, vector2!, frontRepo)
 					}
 				)
 
@@ -346,9 +404,12 @@ export class FrontRepoService {
 }
 
 // insertion point for get unique ID per struct 
-export function getCountryUniqueID(id: number): number {
+export function getBezierCurveUniqueID(id: number): number {
 	return 31 * id
 }
-export function getHelloUniqueID(id: number): number {
+export function getBezierSegmentUniqueID(id: number): number {
 	return 37 * id
+}
+export function getVector2UniqueID(id: number): number {
+	return 41 * id
 }

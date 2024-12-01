@@ -47,25 +47,34 @@ type StageStruct struct {
 	path string
 
 	// insertion point for definition of arrays registering instances
-	Countrys           map[*Country]any
-	Countrys_mapString map[string]*Country
+	BezierCurves           map[*BezierCurve]any
+	BezierCurves_mapString map[string]*BezierCurve
 
 	// insertion point for slice of pointers maps
-	Country_AlternateHellos_reverseMap map[*Hello]*Country
+	BezierCurve_BezierSegments_reverseMap map[*BezierSegment]*BezierCurve
 
-	OnAfterCountryCreateCallback OnAfterCreateInterface[Country]
-	OnAfterCountryUpdateCallback OnAfterUpdateInterface[Country]
-	OnAfterCountryDeleteCallback OnAfterDeleteInterface[Country]
-	OnAfterCountryReadCallback   OnAfterReadInterface[Country]
+	OnAfterBezierCurveCreateCallback OnAfterCreateInterface[BezierCurve]
+	OnAfterBezierCurveUpdateCallback OnAfterUpdateInterface[BezierCurve]
+	OnAfterBezierCurveDeleteCallback OnAfterDeleteInterface[BezierCurve]
+	OnAfterBezierCurveReadCallback   OnAfterReadInterface[BezierCurve]
 
-	Hellos           map[*Hello]any
-	Hellos_mapString map[string]*Hello
+	BezierSegments           map[*BezierSegment]any
+	BezierSegments_mapString map[string]*BezierSegment
 
 	// insertion point for slice of pointers maps
-	OnAfterHelloCreateCallback OnAfterCreateInterface[Hello]
-	OnAfterHelloUpdateCallback OnAfterUpdateInterface[Hello]
-	OnAfterHelloDeleteCallback OnAfterDeleteInterface[Hello]
-	OnAfterHelloReadCallback   OnAfterReadInterface[Hello]
+	OnAfterBezierSegmentCreateCallback OnAfterCreateInterface[BezierSegment]
+	OnAfterBezierSegmentUpdateCallback OnAfterUpdateInterface[BezierSegment]
+	OnAfterBezierSegmentDeleteCallback OnAfterDeleteInterface[BezierSegment]
+	OnAfterBezierSegmentReadCallback   OnAfterReadInterface[BezierSegment]
+
+	Vector2s           map[*Vector2]any
+	Vector2s_mapString map[string]*Vector2
+
+	// insertion point for slice of pointers maps
+	OnAfterVector2CreateCallback OnAfterCreateInterface[Vector2]
+	OnAfterVector2UpdateCallback OnAfterUpdateInterface[Vector2]
+	OnAfterVector2DeleteCallback OnAfterDeleteInterface[Vector2]
+	OnAfterVector2ReadCallback   OnAfterReadInterface[Vector2]
 
 	AllModelsStructCreateCallback AllModelsStructCreateInterface
 
@@ -135,10 +144,12 @@ type BackRepoInterface interface {
 	BackupXL(stage *StageStruct, dirPath string)
 	RestoreXL(stage *StageStruct, dirPath string)
 	// insertion point for Commit and Checkout signatures
-	CommitCountry(country *Country)
-	CheckoutCountry(country *Country)
-	CommitHello(hello *Hello)
-	CheckoutHello(hello *Hello)
+	CommitBezierCurve(beziercurve *BezierCurve)
+	CheckoutBezierCurve(beziercurve *BezierCurve)
+	CommitBezierSegment(beziersegment *BezierSegment)
+	CheckoutBezierSegment(beziersegment *BezierSegment)
+	CommitVector2(vector2 *Vector2)
+	CheckoutVector2(vector2 *Vector2)
 	GetLastCommitFromBackNb() uint
 	GetLastPushFromFrontNb() uint
 }
@@ -146,11 +157,14 @@ type BackRepoInterface interface {
 func NewStage(path string) (stage *StageStruct) {
 
 	stage = &StageStruct{ // insertion point for array initiatialisation
-		Countrys:           make(map[*Country]any),
-		Countrys_mapString: make(map[string]*Country),
+		BezierCurves:           make(map[*BezierCurve]any),
+		BezierCurves_mapString: make(map[string]*BezierCurve),
 
-		Hellos:           make(map[*Hello]any),
-		Hellos_mapString: make(map[string]*Hello),
+		BezierSegments:           make(map[*BezierSegment]any),
+		BezierSegments_mapString: make(map[string]*BezierSegment),
+
+		Vector2s:           make(map[*Vector2]any),
+		Vector2s_mapString: make(map[string]*Vector2),
 
 		// end of insertion point
 		Map_GongStructName_InstancesNb: make(map[string]int),
@@ -185,8 +199,9 @@ func (stage *StageStruct) Commit() {
 	}
 
 	// insertion point for computing the map of number of instances per gongstruct
-	stage.Map_GongStructName_InstancesNb["Country"] = len(stage.Countrys)
-	stage.Map_GongStructName_InstancesNb["Hello"] = len(stage.Hellos)
+	stage.Map_GongStructName_InstancesNb["BezierCurve"] = len(stage.BezierCurves)
+	stage.Map_GongStructName_InstancesNb["BezierSegment"] = len(stage.BezierSegments)
+	stage.Map_GongStructName_InstancesNb["Vector2"] = len(stage.Vector2s)
 
 }
 
@@ -197,8 +212,9 @@ func (stage *StageStruct) Checkout() {
 
 	stage.ComputeReverseMaps()
 	// insertion point for computing the map of number of instances per gongstruct
-	stage.Map_GongStructName_InstancesNb["Country"] = len(stage.Countrys)
-	stage.Map_GongStructName_InstancesNb["Hello"] = len(stage.Hellos)
+	stage.Map_GongStructName_InstancesNb["BezierCurve"] = len(stage.BezierCurves)
+	stage.Map_GongStructName_InstancesNb["BezierSegment"] = len(stage.BezierSegments)
+	stage.Map_GongStructName_InstancesNb["Vector2"] = len(stage.Vector2s)
 
 }
 
@@ -231,142 +247,204 @@ func (stage *StageStruct) RestoreXL(dirPath string) {
 }
 
 // insertion point for cumulative sub template with model space calls
-// Stage puts country to the model stage
-func (country *Country) Stage(stage *StageStruct) *Country {
-	stage.Countrys[country] = __member
-	stage.Countrys_mapString[country.Name] = country
+// Stage puts beziercurve to the model stage
+func (beziercurve *BezierCurve) Stage(stage *StageStruct) *BezierCurve {
+	stage.BezierCurves[beziercurve] = __member
+	stage.BezierCurves_mapString[beziercurve.Name] = beziercurve
 
-	return country
+	return beziercurve
 }
 
-// Unstage removes country off the model stage
-func (country *Country) Unstage(stage *StageStruct) *Country {
-	delete(stage.Countrys, country)
-	delete(stage.Countrys_mapString, country.Name)
-	return country
+// Unstage removes beziercurve off the model stage
+func (beziercurve *BezierCurve) Unstage(stage *StageStruct) *BezierCurve {
+	delete(stage.BezierCurves, beziercurve)
+	delete(stage.BezierCurves_mapString, beziercurve.Name)
+	return beziercurve
 }
 
-// UnstageVoid removes country off the model stage
-func (country *Country) UnstageVoid(stage *StageStruct) {
-	delete(stage.Countrys, country)
-	delete(stage.Countrys_mapString, country.Name)
+// UnstageVoid removes beziercurve off the model stage
+func (beziercurve *BezierCurve) UnstageVoid(stage *StageStruct) {
+	delete(stage.BezierCurves, beziercurve)
+	delete(stage.BezierCurves_mapString, beziercurve.Name)
 }
 
-// commit country to the back repo (if it is already staged)
-func (country *Country) Commit(stage *StageStruct) *Country {
-	if _, ok := stage.Countrys[country]; ok {
+// commit beziercurve to the back repo (if it is already staged)
+func (beziercurve *BezierCurve) Commit(stage *StageStruct) *BezierCurve {
+	if _, ok := stage.BezierCurves[beziercurve]; ok {
 		if stage.BackRepo != nil {
-			stage.BackRepo.CommitCountry(country)
+			stage.BackRepo.CommitBezierCurve(beziercurve)
 		}
 	}
-	return country
+	return beziercurve
 }
 
-func (country *Country) CommitVoid(stage *StageStruct) {
-	country.Commit(stage)
+func (beziercurve *BezierCurve) CommitVoid(stage *StageStruct) {
+	beziercurve.Commit(stage)
 }
 
-// Checkout country to the back repo (if it is already staged)
-func (country *Country) Checkout(stage *StageStruct) *Country {
-	if _, ok := stage.Countrys[country]; ok {
+// Checkout beziercurve to the back repo (if it is already staged)
+func (beziercurve *BezierCurve) Checkout(stage *StageStruct) *BezierCurve {
+	if _, ok := stage.BezierCurves[beziercurve]; ok {
 		if stage.BackRepo != nil {
-			stage.BackRepo.CheckoutCountry(country)
+			stage.BackRepo.CheckoutBezierCurve(beziercurve)
 		}
 	}
-	return country
+	return beziercurve
 }
 
 // for satisfaction of GongStruct interface
-func (country *Country) GetName() (res string) {
-	return country.Name
+func (beziercurve *BezierCurve) GetName() (res string) {
+	return beziercurve.Name
 }
 
-// Stage puts hello to the model stage
-func (hello *Hello) Stage(stage *StageStruct) *Hello {
-	stage.Hellos[hello] = __member
-	stage.Hellos_mapString[hello.Name] = hello
+// Stage puts beziersegment to the model stage
+func (beziersegment *BezierSegment) Stage(stage *StageStruct) *BezierSegment {
+	stage.BezierSegments[beziersegment] = __member
+	stage.BezierSegments_mapString[beziersegment.Name] = beziersegment
 
-	return hello
+	return beziersegment
 }
 
-// Unstage removes hello off the model stage
-func (hello *Hello) Unstage(stage *StageStruct) *Hello {
-	delete(stage.Hellos, hello)
-	delete(stage.Hellos_mapString, hello.Name)
-	return hello
+// Unstage removes beziersegment off the model stage
+func (beziersegment *BezierSegment) Unstage(stage *StageStruct) *BezierSegment {
+	delete(stage.BezierSegments, beziersegment)
+	delete(stage.BezierSegments_mapString, beziersegment.Name)
+	return beziersegment
 }
 
-// UnstageVoid removes hello off the model stage
-func (hello *Hello) UnstageVoid(stage *StageStruct) {
-	delete(stage.Hellos, hello)
-	delete(stage.Hellos_mapString, hello.Name)
+// UnstageVoid removes beziersegment off the model stage
+func (beziersegment *BezierSegment) UnstageVoid(stage *StageStruct) {
+	delete(stage.BezierSegments, beziersegment)
+	delete(stage.BezierSegments_mapString, beziersegment.Name)
 }
 
-// commit hello to the back repo (if it is already staged)
-func (hello *Hello) Commit(stage *StageStruct) *Hello {
-	if _, ok := stage.Hellos[hello]; ok {
+// commit beziersegment to the back repo (if it is already staged)
+func (beziersegment *BezierSegment) Commit(stage *StageStruct) *BezierSegment {
+	if _, ok := stage.BezierSegments[beziersegment]; ok {
 		if stage.BackRepo != nil {
-			stage.BackRepo.CommitHello(hello)
+			stage.BackRepo.CommitBezierSegment(beziersegment)
 		}
 	}
-	return hello
+	return beziersegment
 }
 
-func (hello *Hello) CommitVoid(stage *StageStruct) {
-	hello.Commit(stage)
+func (beziersegment *BezierSegment) CommitVoid(stage *StageStruct) {
+	beziersegment.Commit(stage)
 }
 
-// Checkout hello to the back repo (if it is already staged)
-func (hello *Hello) Checkout(stage *StageStruct) *Hello {
-	if _, ok := stage.Hellos[hello]; ok {
+// Checkout beziersegment to the back repo (if it is already staged)
+func (beziersegment *BezierSegment) Checkout(stage *StageStruct) *BezierSegment {
+	if _, ok := stage.BezierSegments[beziersegment]; ok {
 		if stage.BackRepo != nil {
-			stage.BackRepo.CheckoutHello(hello)
+			stage.BackRepo.CheckoutBezierSegment(beziersegment)
 		}
 	}
-	return hello
+	return beziersegment
 }
 
 // for satisfaction of GongStruct interface
-func (hello *Hello) GetName() (res string) {
-	return hello.Name
+func (beziersegment *BezierSegment) GetName() (res string) {
+	return beziersegment.Name
+}
+
+// Stage puts vector2 to the model stage
+func (vector2 *Vector2) Stage(stage *StageStruct) *Vector2 {
+	stage.Vector2s[vector2] = __member
+	stage.Vector2s_mapString[vector2.Name] = vector2
+
+	return vector2
+}
+
+// Unstage removes vector2 off the model stage
+func (vector2 *Vector2) Unstage(stage *StageStruct) *Vector2 {
+	delete(stage.Vector2s, vector2)
+	delete(stage.Vector2s_mapString, vector2.Name)
+	return vector2
+}
+
+// UnstageVoid removes vector2 off the model stage
+func (vector2 *Vector2) UnstageVoid(stage *StageStruct) {
+	delete(stage.Vector2s, vector2)
+	delete(stage.Vector2s_mapString, vector2.Name)
+}
+
+// commit vector2 to the back repo (if it is already staged)
+func (vector2 *Vector2) Commit(stage *StageStruct) *Vector2 {
+	if _, ok := stage.Vector2s[vector2]; ok {
+		if stage.BackRepo != nil {
+			stage.BackRepo.CommitVector2(vector2)
+		}
+	}
+	return vector2
+}
+
+func (vector2 *Vector2) CommitVoid(stage *StageStruct) {
+	vector2.Commit(stage)
+}
+
+// Checkout vector2 to the back repo (if it is already staged)
+func (vector2 *Vector2) Checkout(stage *StageStruct) *Vector2 {
+	if _, ok := stage.Vector2s[vector2]; ok {
+		if stage.BackRepo != nil {
+			stage.BackRepo.CheckoutVector2(vector2)
+		}
+	}
+	return vector2
+}
+
+// for satisfaction of GongStruct interface
+func (vector2 *Vector2) GetName() (res string) {
+	return vector2.Name
 }
 
 // swagger:ignore
 type AllModelsStructCreateInterface interface { // insertion point for Callbacks on creation
-	CreateORMCountry(Country *Country)
-	CreateORMHello(Hello *Hello)
+	CreateORMBezierCurve(BezierCurve *BezierCurve)
+	CreateORMBezierSegment(BezierSegment *BezierSegment)
+	CreateORMVector2(Vector2 *Vector2)
 }
 
 type AllModelsStructDeleteInterface interface { // insertion point for Callbacks on deletion
-	DeleteORMCountry(Country *Country)
-	DeleteORMHello(Hello *Hello)
+	DeleteORMBezierCurve(BezierCurve *BezierCurve)
+	DeleteORMBezierSegment(BezierSegment *BezierSegment)
+	DeleteORMVector2(Vector2 *Vector2)
 }
 
 func (stage *StageStruct) Reset() { // insertion point for array reset
-	stage.Countrys = make(map[*Country]any)
-	stage.Countrys_mapString = make(map[string]*Country)
+	stage.BezierCurves = make(map[*BezierCurve]any)
+	stage.BezierCurves_mapString = make(map[string]*BezierCurve)
 
-	stage.Hellos = make(map[*Hello]any)
-	stage.Hellos_mapString = make(map[string]*Hello)
+	stage.BezierSegments = make(map[*BezierSegment]any)
+	stage.BezierSegments_mapString = make(map[string]*BezierSegment)
+
+	stage.Vector2s = make(map[*Vector2]any)
+	stage.Vector2s_mapString = make(map[string]*Vector2)
 
 }
 
 func (stage *StageStruct) Nil() { // insertion point for array nil
-	stage.Countrys = nil
-	stage.Countrys_mapString = nil
+	stage.BezierCurves = nil
+	stage.BezierCurves_mapString = nil
 
-	stage.Hellos = nil
-	stage.Hellos_mapString = nil
+	stage.BezierSegments = nil
+	stage.BezierSegments_mapString = nil
+
+	stage.Vector2s = nil
+	stage.Vector2s_mapString = nil
 
 }
 
 func (stage *StageStruct) Unstage() { // insertion point for array nil
-	for country := range stage.Countrys {
-		country.Unstage(stage)
+	for beziercurve := range stage.BezierCurves {
+		beziercurve.Unstage(stage)
 	}
 
-	for hello := range stage.Hellos {
-		hello.Unstage(stage)
+	for beziersegment := range stage.BezierSegments {
+		beziersegment.Unstage(stage)
+	}
+
+	for vector2 := range stage.Vector2s {
+		vector2.Unstage(stage)
 	}
 
 }
@@ -430,10 +508,12 @@ func GongGetSet[Type GongstructSet](stage *StageStruct) *Type {
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case map[*Country]any:
-		return any(&stage.Countrys).(*Type)
-	case map[*Hello]any:
-		return any(&stage.Hellos).(*Type)
+	case map[*BezierCurve]any:
+		return any(&stage.BezierCurves).(*Type)
+	case map[*BezierSegment]any:
+		return any(&stage.BezierSegments).(*Type)
+	case map[*Vector2]any:
+		return any(&stage.Vector2s).(*Type)
 	default:
 		return nil
 	}
@@ -446,10 +526,12 @@ func GongGetMap[Type GongstructMapString](stage *StageStruct) *Type {
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case map[string]*Country:
-		return any(&stage.Countrys_mapString).(*Type)
-	case map[string]*Hello:
-		return any(&stage.Hellos_mapString).(*Type)
+	case map[string]*BezierCurve:
+		return any(&stage.BezierCurves_mapString).(*Type)
+	case map[string]*BezierSegment:
+		return any(&stage.BezierSegments_mapString).(*Type)
+	case map[string]*Vector2:
+		return any(&stage.Vector2s_mapString).(*Type)
 	default:
 		return nil
 	}
@@ -462,10 +544,12 @@ func GetGongstructInstancesSet[Type Gongstruct](stage *StageStruct) *map[*Type]a
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case Country:
-		return any(&stage.Countrys).(*map[*Type]any)
-	case Hello:
-		return any(&stage.Hellos).(*map[*Type]any)
+	case BezierCurve:
+		return any(&stage.BezierCurves).(*map[*Type]any)
+	case BezierSegment:
+		return any(&stage.BezierSegments).(*map[*Type]any)
+	case Vector2:
+		return any(&stage.Vector2s).(*map[*Type]any)
 	default:
 		return nil
 	}
@@ -478,10 +562,12 @@ func GetGongstructInstancesSetFromPointerType[Type PointerToGongstruct](stage *S
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case *Country:
-		return any(&stage.Countrys).(*map[Type]any)
-	case *Hello:
-		return any(&stage.Hellos).(*map[Type]any)
+	case *BezierCurve:
+		return any(&stage.BezierCurves).(*map[Type]any)
+	case *BezierSegment:
+		return any(&stage.BezierSegments).(*map[Type]any)
+	case *Vector2:
+		return any(&stage.Vector2s).(*map[Type]any)
 	default:
 		return nil
 	}
@@ -494,10 +580,12 @@ func GetGongstructInstancesMap[Type Gongstruct](stage *StageStruct) *map[string]
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case Country:
-		return any(&stage.Countrys_mapString).(*map[string]*Type)
-	case Hello:
-		return any(&stage.Hellos_mapString).(*map[string]*Type)
+	case BezierCurve:
+		return any(&stage.BezierCurves_mapString).(*map[string]*Type)
+	case BezierSegment:
+		return any(&stage.BezierSegments_mapString).(*map[string]*Type)
+	case Vector2:
+		return any(&stage.Vector2s_mapString).(*map[string]*Type)
 	default:
 		return nil
 	}
@@ -512,16 +600,26 @@ func GetAssociationName[Type Gongstruct]() *Type {
 
 	switch any(ret).(type) {
 	// insertion point for instance with special fields
-	case Country:
-		return any(&Country{
+	case BezierCurve:
+		return any(&BezierCurve{
 			// Initialisation of associations
-			// field is initialized with an instance of Hello with the name of the field
-			Hello: &Hello{Name: "Hello"},
-			// field is initialized with an instance of Hello with the name of the field
-			AlternateHellos: []*Hello{{Name: "AlternateHellos"}},
+			// field is initialized with an instance of BezierSegment with the name of the field
+			BezierSegments: []*BezierSegment{{Name: "BezierSegments"}},
 		}).(*Type)
-	case Hello:
-		return any(&Hello{
+	case BezierSegment:
+		return any(&BezierSegment{
+			// Initialisation of associations
+			// field is initialized with an instance of Vector2 with the name of the field
+			Start: &Vector2{Name: "Start"},
+			// field is initialized with an instance of Vector2 with the name of the field
+			ControlPointStart: &Vector2{Name: "ControlPointStart"},
+			// field is initialized with an instance of Vector2 with the name of the field
+			ControlPointEnd: &Vector2{Name: "ControlPointEnd"},
+			// field is initialized with an instance of Vector2 with the name of the field
+			End: &Vector2{Name: "End"},
+		}).(*Type)
+	case Vector2:
+		return any(&Vector2{
 			// Initialisation of associations
 		}).(*Type)
 	default:
@@ -542,30 +640,86 @@ func GetPointerReverseMap[Start, End Gongstruct](fieldname string, stage *StageS
 
 	switch any(ret).(type) {
 	// insertion point of functions that provide maps for reverse associations
-	// reverse maps of direct associations of Country
-	case Country:
+	// reverse maps of direct associations of BezierCurve
+	case BezierCurve:
 		switch fieldname {
 		// insertion point for per direct association field
-		case "Hello":
-			res := make(map[*Hello][]*Country)
-			for country := range stage.Countrys {
-				if country.Hello != nil {
-					hello_ := country.Hello
-					var countrys []*Country
-					_, ok := res[hello_]
+		}
+	// reverse maps of direct associations of BezierSegment
+	case BezierSegment:
+		switch fieldname {
+		// insertion point for per direct association field
+		case "Start":
+			res := make(map[*Vector2][]*BezierSegment)
+			for beziersegment := range stage.BezierSegments {
+				if beziersegment.Start != nil {
+					vector2_ := beziersegment.Start
+					var beziersegments []*BezierSegment
+					_, ok := res[vector2_]
 					if ok {
-						countrys = res[hello_]
+						beziersegments = res[vector2_]
 					} else {
-						countrys = make([]*Country, 0)
+						beziersegments = make([]*BezierSegment, 0)
 					}
-					countrys = append(countrys, country)
-					res[hello_] = countrys
+					beziersegments = append(beziersegments, beziersegment)
+					res[vector2_] = beziersegments
+				}
+			}
+			return any(res).(map[*End][]*Start)
+		case "ControlPointStart":
+			res := make(map[*Vector2][]*BezierSegment)
+			for beziersegment := range stage.BezierSegments {
+				if beziersegment.ControlPointStart != nil {
+					vector2_ := beziersegment.ControlPointStart
+					var beziersegments []*BezierSegment
+					_, ok := res[vector2_]
+					if ok {
+						beziersegments = res[vector2_]
+					} else {
+						beziersegments = make([]*BezierSegment, 0)
+					}
+					beziersegments = append(beziersegments, beziersegment)
+					res[vector2_] = beziersegments
+				}
+			}
+			return any(res).(map[*End][]*Start)
+		case "ControlPointEnd":
+			res := make(map[*Vector2][]*BezierSegment)
+			for beziersegment := range stage.BezierSegments {
+				if beziersegment.ControlPointEnd != nil {
+					vector2_ := beziersegment.ControlPointEnd
+					var beziersegments []*BezierSegment
+					_, ok := res[vector2_]
+					if ok {
+						beziersegments = res[vector2_]
+					} else {
+						beziersegments = make([]*BezierSegment, 0)
+					}
+					beziersegments = append(beziersegments, beziersegment)
+					res[vector2_] = beziersegments
+				}
+			}
+			return any(res).(map[*End][]*Start)
+		case "End":
+			res := make(map[*Vector2][]*BezierSegment)
+			for beziersegment := range stage.BezierSegments {
+				if beziersegment.End != nil {
+					vector2_ := beziersegment.End
+					var beziersegments []*BezierSegment
+					_, ok := res[vector2_]
+					if ok {
+						beziersegments = res[vector2_]
+					} else {
+						beziersegments = make([]*BezierSegment, 0)
+					}
+					beziersegments = append(beziersegments, beziersegment)
+					res[vector2_] = beziersegments
 				}
 			}
 			return any(res).(map[*End][]*Start)
 		}
-	// reverse maps of direct associations of Hello
-	case Hello:
+	// reverse maps of direct associations of Vector2
+	case Vector2:
 		switch fieldname {
 		// insertion point for per direct association field
 		}
@@ -585,21 +739,26 @@ func GetSliceOfPointersReverseMap[Start, End Gongstruct](fieldname string, stage
 
 	switch any(ret).(type) {
 	// insertion point of functions that provide maps for reverse associations
-	// reverse maps of direct associations of Country
-	case Country:
+	// reverse maps of direct associations of BezierCurve
+	case BezierCurve:
 		switch fieldname {
 		// insertion point for per direct association field
-		case "AlternateHellos":
-			res := make(map[*Hello]*Country)
-			for country := range stage.Countrys {
-				for _, hello_ := range country.AlternateHellos {
-					res[hello_] = country
+		case "BezierSegments":
+			res := make(map[*BezierSegment]*BezierCurve)
+			for beziercurve := range stage.BezierCurves {
+				for _, beziersegment_ := range beziercurve.BezierSegments {
+					res[beziersegment_] = beziercurve
 				}
 			}
 			return any(res).(map[*End]*Start)
 		}
-	// reverse maps of direct associations of Hello
-	case Hello:
+	// reverse maps of direct associations of BezierSegment
+	case BezierSegment:
+		switch fieldname {
+		// insertion point for per direct association field
+		}
+	// reverse maps of direct associations of Vector2
+	case Vector2:
 		switch fieldname {
 		// insertion point for per direct association field
 		}
@@ -615,10 +774,12 @@ func GetGongstructName[Type Gongstruct]() (res string) {
 
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
-	case Country:
-		res = "Country"
-	case Hello:
-		res = "Hello"
+	case BezierCurve:
+		res = "BezierCurve"
+	case BezierSegment:
+		res = "BezierSegment"
+	case Vector2:
+		res = "Vector2"
 	}
 	return res
 }
@@ -631,10 +792,12 @@ func GetPointerToGongstructName[Type PointerToGongstruct]() (res string) {
 
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
-	case *Country:
-		res = "Country"
-	case *Hello:
-		res = "Hello"
+	case *BezierCurve:
+		res = "BezierCurve"
+	case *BezierSegment:
+		res = "BezierSegment"
+	case *Vector2:
+		res = "Vector2"
 	}
 	return res
 }
@@ -646,10 +809,12 @@ func GetFields[Type Gongstruct]() (res []string) {
 
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
-	case Country:
-		res = []string{"Name", "Hello", "AlternateHellos"}
-	case Hello:
-		res = []string{"Name"}
+	case BezierCurve:
+		res = []string{"Name", "BezierSegments"}
+	case BezierSegment:
+		res = []string{"Name", "Start", "ControlPointStart", "ControlPointEnd", "End"}
+	case Vector2:
+		res = []string{"Name", "X", "Y"}
 	}
 	return
 }
@@ -668,15 +833,18 @@ func GetReverseFields[Type Gongstruct]() (res []ReverseField) {
 	switch any(ret).(type) {
 
 	// insertion point for generic get gongstruct name
-	case Country:
+	case BezierCurve:
 		var rf ReverseField
 		_ = rf
-	case Hello:
+	case BezierSegment:
 		var rf ReverseField
 		_ = rf
-		rf.GongstructName = "Country"
-		rf.Fieldname = "AlternateHellos"
+		rf.GongstructName = "BezierCurve"
+		rf.Fieldname = "BezierSegments"
 		res = append(res, rf)
+	case Vector2:
+		var rf ReverseField
+		_ = rf
 	}
 	return
 }
@@ -688,10 +856,12 @@ func GetFieldsFromPointer[Type PointerToGongstruct]() (res []string) {
 
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
-	case *Country:
-		res = []string{"Name", "Hello", "AlternateHellos"}
-	case *Hello:
-		res = []string{"Name"}
+	case *BezierCurve:
+		res = []string{"Name", "BezierSegments"}
+	case *BezierSegment:
+		res = []string{"Name", "Start", "ControlPointStart", "ControlPointEnd", "End"}
+	case *Vector2:
+		res = []string{"Name", "X", "Y"}
 	}
 	return
 }
@@ -700,28 +870,50 @@ func GetFieldStringValueFromPointer[Type PointerToGongstruct](instance Type, fie
 
 	switch inferedInstance := any(instance).(type) {
 	// insertion point for generic get gongstruct field value
-	case *Country:
+	case *BezierCurve:
 		switch fieldName {
 		// string value of fields
 		case "Name":
 			res = inferedInstance.Name
-		case "Hello":
-			if inferedInstance.Hello != nil {
-				res = inferedInstance.Hello.Name
-			}
-		case "AlternateHellos":
-			for idx, __instance__ := range inferedInstance.AlternateHellos {
+		case "BezierSegments":
+			for idx, __instance__ := range inferedInstance.BezierSegments {
 				if idx > 0 {
 					res += "\n"
 				}
 				res += __instance__.Name
 			}
 		}
-	case *Hello:
+	case *BezierSegment:
 		switch fieldName {
 		// string value of fields
 		case "Name":
 			res = inferedInstance.Name
+		case "Start":
+			if inferedInstance.Start != nil {
+				res = inferedInstance.Start.Name
+			}
+		case "ControlPointStart":
+			if inferedInstance.ControlPointStart != nil {
+				res = inferedInstance.ControlPointStart.Name
+			}
+		case "ControlPointEnd":
+			if inferedInstance.ControlPointEnd != nil {
+				res = inferedInstance.ControlPointEnd.Name
+			}
+		case "End":
+			if inferedInstance.End != nil {
+				res = inferedInstance.End.Name
+			}
+		}
+	case *Vector2:
+		switch fieldName {
+		// string value of fields
+		case "Name":
+			res = inferedInstance.Name
+		case "X":
+			res = fmt.Sprintf("%f", inferedInstance.X)
+		case "Y":
+			res = fmt.Sprintf("%f", inferedInstance.Y)
 		}
 	default:
 		_ = inferedInstance
@@ -733,28 +925,50 @@ func GetFieldStringValue[Type Gongstruct](instance Type, fieldName string) (res 
 
 	switch inferedInstance := any(instance).(type) {
 	// insertion point for generic get gongstruct field value
-	case Country:
+	case BezierCurve:
 		switch fieldName {
 		// string value of fields
 		case "Name":
 			res = inferedInstance.Name
-		case "Hello":
-			if inferedInstance.Hello != nil {
-				res = inferedInstance.Hello.Name
-			}
-		case "AlternateHellos":
-			for idx, __instance__ := range inferedInstance.AlternateHellos {
+		case "BezierSegments":
+			for idx, __instance__ := range inferedInstance.BezierSegments {
 				if idx > 0 {
 					res += "\n"
 				}
 				res += __instance__.Name
 			}
 		}
-	case Hello:
+	case BezierSegment:
 		switch fieldName {
 		// string value of fields
 		case "Name":
 			res = inferedInstance.Name
+		case "Start":
+			if inferedInstance.Start != nil {
+				res = inferedInstance.Start.Name
+			}
+		case "ControlPointStart":
+			if inferedInstance.ControlPointStart != nil {
+				res = inferedInstance.ControlPointStart.Name
+			}
+		case "ControlPointEnd":
+			if inferedInstance.ControlPointEnd != nil {
+				res = inferedInstance.ControlPointEnd.Name
+			}
+		case "End":
+			if inferedInstance.End != nil {
+				res = inferedInstance.End.Name
+			}
+		}
+	case Vector2:
+		switch fieldName {
+		// string value of fields
+		case "Name":
+			res = inferedInstance.Name
+		case "X":
+			res = fmt.Sprintf("%f", inferedInstance.X)
+		case "Y":
+			res = fmt.Sprintf("%f", inferedInstance.Y)
 		}
 	default:
 		_ = inferedInstance

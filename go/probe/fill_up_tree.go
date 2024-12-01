@@ -62,23 +62,33 @@ func fillUpTree(
 
 		switch gongStruct.Name {
 		// insertion point
-		case "Country":
+		case "BezierCurve":
 			nodeGongstruct.Name = name
-			set := *models.GetGongstructInstancesSet[models.Country](probe.stageOfInterest)
-			for _country := range set {
-				nodeInstance := (&tree.Node{Name: _country.GetName()}).Stage(probe.treeStage)
+			set := *models.GetGongstructInstancesSet[models.BezierCurve](probe.stageOfInterest)
+			for _beziercurve := range set {
+				nodeInstance := (&tree.Node{Name: _beziercurve.GetName()}).Stage(probe.treeStage)
 				nodeInstance.IsNodeClickable = true
-				nodeInstance.Impl = NewInstanceNodeCallback(_country, "Country", probe)
+				nodeInstance.Impl = NewInstanceNodeCallback(_beziercurve, "BezierCurve", probe)
 
 				nodeGongstruct.Children = append(nodeGongstruct.Children, nodeInstance)
 			}
-		case "Hello":
+		case "BezierSegment":
 			nodeGongstruct.Name = name
-			set := *models.GetGongstructInstancesSet[models.Hello](probe.stageOfInterest)
-			for _hello := range set {
-				nodeInstance := (&tree.Node{Name: _hello.GetName()}).Stage(probe.treeStage)
+			set := *models.GetGongstructInstancesSet[models.BezierSegment](probe.stageOfInterest)
+			for _beziersegment := range set {
+				nodeInstance := (&tree.Node{Name: _beziersegment.GetName()}).Stage(probe.treeStage)
 				nodeInstance.IsNodeClickable = true
-				nodeInstance.Impl = NewInstanceNodeCallback(_hello, "Hello", probe)
+				nodeInstance.Impl = NewInstanceNodeCallback(_beziersegment, "BezierSegment", probe)
+
+				nodeGongstruct.Children = append(nodeGongstruct.Children, nodeInstance)
+			}
+		case "Vector2":
+			nodeGongstruct.Name = name
+			set := *models.GetGongstructInstancesSet[models.Vector2](probe.stageOfInterest)
+			for _vector2 := range set {
+				nodeInstance := (&tree.Node{Name: _vector2.GetName()}).Stage(probe.treeStage)
+				nodeInstance.IsNodeClickable = true
+				nodeInstance.Impl = NewInstanceNodeCallback(_vector2, "Vector2", probe)
 
 				nodeGongstruct.Children = append(nodeGongstruct.Children, nodeInstance)
 			}

@@ -4,9 +4,11 @@ package orm
 type BackRepoData struct {
 	// insertion point for slices
 
-	CountryAPIs []*CountryAPI
+	BezierCurveAPIs []*BezierCurveAPI
 
-	HelloAPIs []*HelloAPI
+	BezierSegmentAPIs []*BezierSegmentAPI
+
+	Vector2APIs []*Vector2API
 }
 
 func CopyBackRepoToBackRepoData(backRepo *BackRepoStruct, backRepoData *BackRepoData) {
@@ -16,24 +18,34 @@ func CopyBackRepoToBackRepoData(backRepo *BackRepoStruct, backRepoData *BackRepo
 	defer backRepo.rwMutex.RUnlock()
 
 	// insertion point for slices copies
-	for _, countryDB := range backRepo.BackRepoCountry.Map_CountryDBID_CountryDB {
+	for _, beziercurveDB := range backRepo.BackRepoBezierCurve.Map_BezierCurveDBID_BezierCurveDB {
 
-		var countryAPI CountryAPI
-		countryAPI.ID = countryDB.ID
-		countryAPI.CountryPointersEncoding = countryDB.CountryPointersEncoding
-		countryDB.CopyBasicFieldsToCountry_WOP(&countryAPI.Country_WOP)
+		var beziercurveAPI BezierCurveAPI
+		beziercurveAPI.ID = beziercurveDB.ID
+		beziercurveAPI.BezierCurvePointersEncoding = beziercurveDB.BezierCurvePointersEncoding
+		beziercurveDB.CopyBasicFieldsToBezierCurve_WOP(&beziercurveAPI.BezierCurve_WOP)
 
-		backRepoData.CountryAPIs = append(backRepoData.CountryAPIs, &countryAPI)
+		backRepoData.BezierCurveAPIs = append(backRepoData.BezierCurveAPIs, &beziercurveAPI)
 	}
 
-	for _, helloDB := range backRepo.BackRepoHello.Map_HelloDBID_HelloDB {
+	for _, beziersegmentDB := range backRepo.BackRepoBezierSegment.Map_BezierSegmentDBID_BezierSegmentDB {
 
-		var helloAPI HelloAPI
-		helloAPI.ID = helloDB.ID
-		helloAPI.HelloPointersEncoding = helloDB.HelloPointersEncoding
-		helloDB.CopyBasicFieldsToHello_WOP(&helloAPI.Hello_WOP)
+		var beziersegmentAPI BezierSegmentAPI
+		beziersegmentAPI.ID = beziersegmentDB.ID
+		beziersegmentAPI.BezierSegmentPointersEncoding = beziersegmentDB.BezierSegmentPointersEncoding
+		beziersegmentDB.CopyBasicFieldsToBezierSegment_WOP(&beziersegmentAPI.BezierSegment_WOP)
 
-		backRepoData.HelloAPIs = append(backRepoData.HelloAPIs, &helloAPI)
+		backRepoData.BezierSegmentAPIs = append(backRepoData.BezierSegmentAPIs, &beziersegmentAPI)
+	}
+
+	for _, vector2DB := range backRepo.BackRepoVector2.Map_Vector2DBID_Vector2DB {
+
+		var vector2API Vector2API
+		vector2API.ID = vector2DB.ID
+		vector2API.Vector2PointersEncoding = vector2DB.Vector2PointersEncoding
+		vector2DB.CopyBasicFieldsToVector2_WOP(&vector2API.Vector2_WOP)
+
+		backRepoData.Vector2APIs = append(backRepoData.Vector2APIs, &vector2API)
 	}
 
 }

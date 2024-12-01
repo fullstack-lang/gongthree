@@ -33,29 +33,32 @@ func EvictInOtherSlices[OwningType PointerToGongstruct, FieldType PointerToGongs
 
 	switch owningInstanceInfered := any(owningInstance).(type) {
 	// insertion point
-	case *Country:
+	case *BezierCurve:
 		// insertion point per field
-		if fieldName == "AlternateHellos" {
+		if fieldName == "BezierSegments" {
 
 			// walk all instances of the owning type
 			for _instance := range *GetGongstructInstancesSetFromPointerType[OwningType](stage) {
-				if any(_instance).(*Country) != owningInstanceInfered {
-					_inferedTypeInstance := any(_instance).(*Country)
+				if any(_instance).(*BezierCurve) != owningInstanceInfered {
+					_inferedTypeInstance := any(_instance).(*BezierCurve)
 					reference := make([]FieldType, 0)
-					targetFieldSlice := any(_inferedTypeInstance.AlternateHellos).([]FieldType)
+					targetFieldSlice := any(_inferedTypeInstance.BezierSegments).([]FieldType)
 					copy(targetFieldSlice, reference)
-					_inferedTypeInstance.AlternateHellos = _inferedTypeInstance.AlternateHellos[0:]
+					_inferedTypeInstance.BezierSegments = _inferedTypeInstance.BezierSegments[0:]
 					for _, fieldInstance := range reference {
 						if _, ok := setOfFieldInstances[any(fieldInstance).(FieldType)]; !ok {
-							_inferedTypeInstance.AlternateHellos =
-								append(_inferedTypeInstance.AlternateHellos, any(fieldInstance).(*Hello))
+							_inferedTypeInstance.BezierSegments =
+								append(_inferedTypeInstance.BezierSegments, any(fieldInstance).(*BezierSegment))
 						}
 					}
 				}
 			}
 		}
 
-	case *Hello:
+	case *BezierSegment:
+		// insertion point per field
+
+	case *Vector2:
 		// insertion point per field
 
 	default:
@@ -67,18 +70,21 @@ func EvictInOtherSlices[OwningType PointerToGongstruct, FieldType PointerToGongs
 // Its complexity is in O(n)O(p) where p is the number of pointers
 func (stage *StageStruct) ComputeReverseMaps() {
 	// insertion point per named struct
-	// Compute reverse map for named struct Country
+	// Compute reverse map for named struct BezierCurve
 	// insertion point per field
-	clear(stage.Country_AlternateHellos_reverseMap)
-	stage.Country_AlternateHellos_reverseMap = make(map[*Hello]*Country)
-	for country := range stage.Countrys {
-		_ = country
-		for _, _hello := range country.AlternateHellos {
-			stage.Country_AlternateHellos_reverseMap[_hello] = country
+	clear(stage.BezierCurve_BezierSegments_reverseMap)
+	stage.BezierCurve_BezierSegments_reverseMap = make(map[*BezierSegment]*BezierCurve)
+	for beziercurve := range stage.BezierCurves {
+		_ = beziercurve
+		for _, _beziersegment := range beziercurve.BezierSegments {
+			stage.BezierCurve_BezierSegments_reverseMap[_beziersegment] = beziercurve
 		}
 	}
 
-	// Compute reverse map for named struct Hello
+	// Compute reverse map for named struct BezierSegment
+	// insertion point per field
+
+	// Compute reverse map for named struct Vector2
 	// insertion point per field
 
 }

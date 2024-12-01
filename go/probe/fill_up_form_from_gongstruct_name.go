@@ -26,32 +26,45 @@ func FillUpFormFromGongstructName(
 
 	switch gongstructName {
 	// insertion point
-	case "Country":
+	case "BezierCurve":
 		formGroup := (&form.FormGroup{
 			Name:  form.FormGroupDefaultName.ToString(),
-			Label: prefix + "Country Form",
+			Label: prefix + "BezierCurve Form",
 		}).Stage(formStage)
-		formGroup.OnSave = __gong__New__CountryFormCallback(
+		formGroup.OnSave = __gong__New__BezierCurveFormCallback(
 			nil,
 			probe,
 			formGroup,
 		)
-		country := new(models.Country)
+		beziercurve := new(models.BezierCurve)
 		formGroup.HasSuppressButton = !isNewInstance
-		FillUpForm(country, formGroup, probe)
-	case "Hello":
+		FillUpForm(beziercurve, formGroup, probe)
+	case "BezierSegment":
 		formGroup := (&form.FormGroup{
 			Name:  form.FormGroupDefaultName.ToString(),
-			Label: prefix + "Hello Form",
+			Label: prefix + "BezierSegment Form",
 		}).Stage(formStage)
-		formGroup.OnSave = __gong__New__HelloFormCallback(
+		formGroup.OnSave = __gong__New__BezierSegmentFormCallback(
 			nil,
 			probe,
 			formGroup,
 		)
-		hello := new(models.Hello)
+		beziersegment := new(models.BezierSegment)
 		formGroup.HasSuppressButton = !isNewInstance
-		FillUpForm(hello, formGroup, probe)
+		FillUpForm(beziersegment, formGroup, probe)
+	case "Vector2":
+		formGroup := (&form.FormGroup{
+			Name:  form.FormGroupDefaultName.ToString(),
+			Label: prefix + "Vector2 Form",
+		}).Stage(formStage)
+		formGroup.OnSave = __gong__New__Vector2FormCallback(
+			nil,
+			probe,
+			formGroup,
+		)
+		vector2 := new(models.Vector2)
+		formGroup.HasSuppressButton = !isNewInstance
+		FillUpForm(vector2, formGroup, probe)
 	}
 	formStage.Commit()
 }

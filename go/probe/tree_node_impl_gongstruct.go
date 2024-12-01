@@ -52,11 +52,14 @@ func (nodeImplGongstruct *TreeNodeImplGongstruct) OnAfterUpdate(
 	log.Println("NodeImplGongstruct:OnAfterUpdate with: ", nodeImplGongstruct.gongStruct.GetName())
 
 	// insertion point
-	if nodeImplGongstruct.gongStruct.GetName() == "Country" {
-		fillUpTable[models.Country](nodeImplGongstruct.probe)
+	if nodeImplGongstruct.gongStruct.GetName() == "BezierCurve" {
+		fillUpTable[models.BezierCurve](nodeImplGongstruct.probe)
 	}
-	if nodeImplGongstruct.gongStruct.GetName() == "Hello" {
-		fillUpTable[models.Hello](nodeImplGongstruct.probe)
+	if nodeImplGongstruct.gongStruct.GetName() == "BezierSegment" {
+		fillUpTable[models.BezierSegment](nodeImplGongstruct.probe)
+	}
+	if nodeImplGongstruct.gongStruct.GetName() == "Vector2" {
+		fillUpTable[models.Vector2](nodeImplGongstruct.probe)
 	}
 
 	// set color for node and reset all other nodes color

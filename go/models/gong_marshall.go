@@ -94,28 +94,28 @@ func (stage *StageStruct) Marshall(file *os.File, modelsPackageName, packageName
 	_ = setValueField
 
 	// insertion initialization of objects to stage
-	map_Country_Identifiers := make(map[*Country]string)
-	_ = map_Country_Identifiers
+	map_BezierCurve_Identifiers := make(map[*BezierCurve]string)
+	_ = map_BezierCurve_Identifiers
 
-	countryOrdered := []*Country{}
-	for country := range stage.Countrys {
-		countryOrdered = append(countryOrdered, country)
+	beziercurveOrdered := []*BezierCurve{}
+	for beziercurve := range stage.BezierCurves {
+		beziercurveOrdered = append(beziercurveOrdered, beziercurve)
 	}
-	sort.Slice(countryOrdered[:], func(i, j int) bool {
-		return countryOrdered[i].Name < countryOrdered[j].Name
+	sort.Slice(beziercurveOrdered[:], func(i, j int) bool {
+		return beziercurveOrdered[i].Name < beziercurveOrdered[j].Name
 	})
-	if len(countryOrdered) > 0 {
+	if len(beziercurveOrdered) > 0 {
 		identifiersDecl += "\n"
 	}
-	for idx, country := range countryOrdered {
+	for idx, beziercurve := range beziercurveOrdered {
 
-		id = generatesIdentifier("Country", idx, country.Name)
-		map_Country_Identifiers[country] = id
+		id = generatesIdentifier("BezierCurve", idx, beziercurve.Name)
+		map_BezierCurve_Identifiers[beziercurve] = id
 
 		decl = IdentifiersDecls
 		decl = strings.ReplaceAll(decl, "{{Identifier}}", id)
-		decl = strings.ReplaceAll(decl, "{{GeneratedStructName}}", "Country")
-		decl = strings.ReplaceAll(decl, "{{GeneratedFieldNameValue}}", country.Name)
+		decl = strings.ReplaceAll(decl, "{{GeneratedStructName}}", "BezierCurve")
+		decl = strings.ReplaceAll(decl, "{{GeneratedFieldNameValue}}", beziercurve.Name)
 		identifiersDecl += decl
 
 		initializerStatements += "\n"
@@ -123,33 +123,33 @@ func (stage *StageStruct) Marshall(file *os.File, modelsPackageName, packageName
 		setValueField = StringInitStatement
 		setValueField = strings.ReplaceAll(setValueField, "{{Identifier}}", id)
 		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldName}}", "Name")
-		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", string(country.Name))
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", string(beziercurve.Name))
 		initializerStatements += setValueField
 
 	}
 
-	map_Hello_Identifiers := make(map[*Hello]string)
-	_ = map_Hello_Identifiers
+	map_BezierSegment_Identifiers := make(map[*BezierSegment]string)
+	_ = map_BezierSegment_Identifiers
 
-	helloOrdered := []*Hello{}
-	for hello := range stage.Hellos {
-		helloOrdered = append(helloOrdered, hello)
+	beziersegmentOrdered := []*BezierSegment{}
+	for beziersegment := range stage.BezierSegments {
+		beziersegmentOrdered = append(beziersegmentOrdered, beziersegment)
 	}
-	sort.Slice(helloOrdered[:], func(i, j int) bool {
-		return helloOrdered[i].Name < helloOrdered[j].Name
+	sort.Slice(beziersegmentOrdered[:], func(i, j int) bool {
+		return beziersegmentOrdered[i].Name < beziersegmentOrdered[j].Name
 	})
-	if len(helloOrdered) > 0 {
+	if len(beziersegmentOrdered) > 0 {
 		identifiersDecl += "\n"
 	}
-	for idx, hello := range helloOrdered {
+	for idx, beziersegment := range beziersegmentOrdered {
 
-		id = generatesIdentifier("Hello", idx, hello.Name)
-		map_Hello_Identifiers[hello] = id
+		id = generatesIdentifier("BezierSegment", idx, beziersegment.Name)
+		map_BezierSegment_Identifiers[beziersegment] = id
 
 		decl = IdentifiersDecls
 		decl = strings.ReplaceAll(decl, "{{Identifier}}", id)
-		decl = strings.ReplaceAll(decl, "{{GeneratedStructName}}", "Hello")
-		decl = strings.ReplaceAll(decl, "{{GeneratedFieldNameValue}}", hello.Name)
+		decl = strings.ReplaceAll(decl, "{{GeneratedStructName}}", "BezierSegment")
+		decl = strings.ReplaceAll(decl, "{{GeneratedFieldNameValue}}", beziersegment.Name)
 		identifiersDecl += decl
 
 		initializerStatements += "\n"
@@ -157,44 +157,124 @@ func (stage *StageStruct) Marshall(file *os.File, modelsPackageName, packageName
 		setValueField = StringInitStatement
 		setValueField = strings.ReplaceAll(setValueField, "{{Identifier}}", id)
 		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldName}}", "Name")
-		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", string(hello.Name))
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", string(beziersegment.Name))
+		initializerStatements += setValueField
+
+	}
+
+	map_Vector2_Identifiers := make(map[*Vector2]string)
+	_ = map_Vector2_Identifiers
+
+	vector2Ordered := []*Vector2{}
+	for vector2 := range stage.Vector2s {
+		vector2Ordered = append(vector2Ordered, vector2)
+	}
+	sort.Slice(vector2Ordered[:], func(i, j int) bool {
+		return vector2Ordered[i].Name < vector2Ordered[j].Name
+	})
+	if len(vector2Ordered) > 0 {
+		identifiersDecl += "\n"
+	}
+	for idx, vector2 := range vector2Ordered {
+
+		id = generatesIdentifier("Vector2", idx, vector2.Name)
+		map_Vector2_Identifiers[vector2] = id
+
+		decl = IdentifiersDecls
+		decl = strings.ReplaceAll(decl, "{{Identifier}}", id)
+		decl = strings.ReplaceAll(decl, "{{GeneratedStructName}}", "Vector2")
+		decl = strings.ReplaceAll(decl, "{{GeneratedFieldNameValue}}", vector2.Name)
+		identifiersDecl += decl
+
+		initializerStatements += "\n"
+		// Initialisation of values
+		setValueField = StringInitStatement
+		setValueField = strings.ReplaceAll(setValueField, "{{Identifier}}", id)
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldName}}", "Name")
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", string(vector2.Name))
+		initializerStatements += setValueField
+
+		setValueField = NumberInitStatement
+		setValueField = strings.ReplaceAll(setValueField, "{{Identifier}}", id)
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldName}}", "X")
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", fmt.Sprintf("%f", vector2.X))
+		initializerStatements += setValueField
+
+		setValueField = NumberInitStatement
+		setValueField = strings.ReplaceAll(setValueField, "{{Identifier}}", id)
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldName}}", "Y")
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", fmt.Sprintf("%f", vector2.Y))
 		initializerStatements += setValueField
 
 	}
 
 	// insertion initialization of objects to stage
-	for idx, country := range countryOrdered {
+	for idx, beziercurve := range beziercurveOrdered {
 		var setPointerField string
 		_ = setPointerField
 
-		id = generatesIdentifier("Country", idx, country.Name)
-		map_Country_Identifiers[country] = id
+		id = generatesIdentifier("BezierCurve", idx, beziercurve.Name)
+		map_BezierCurve_Identifiers[beziercurve] = id
 
 		// Initialisation of values
-		if country.Hello != nil {
-			setPointerField = PointerFieldInitStatement
-			setPointerField = strings.ReplaceAll(setPointerField, "{{Identifier}}", id)
-			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "Hello")
-			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldNameValue}}", map_Hello_Identifiers[country.Hello])
-			pointersInitializesStatements += setPointerField
-		}
-
-		for _, _hello := range country.AlternateHellos {
+		for _, _beziersegment := range beziercurve.BezierSegments {
 			setPointerField = SliceOfPointersFieldInitStatement
 			setPointerField = strings.ReplaceAll(setPointerField, "{{Identifier}}", id)
-			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "AlternateHellos")
-			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldNameValue}}", map_Hello_Identifiers[_hello])
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "BezierSegments")
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldNameValue}}", map_BezierSegment_Identifiers[_beziersegment])
 			pointersInitializesStatements += setPointerField
 		}
 
 	}
 
-	for idx, hello := range helloOrdered {
+	for idx, beziersegment := range beziersegmentOrdered {
 		var setPointerField string
 		_ = setPointerField
 
-		id = generatesIdentifier("Hello", idx, hello.Name)
-		map_Hello_Identifiers[hello] = id
+		id = generatesIdentifier("BezierSegment", idx, beziersegment.Name)
+		map_BezierSegment_Identifiers[beziersegment] = id
+
+		// Initialisation of values
+		if beziersegment.Start != nil {
+			setPointerField = PointerFieldInitStatement
+			setPointerField = strings.ReplaceAll(setPointerField, "{{Identifier}}", id)
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "Start")
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldNameValue}}", map_Vector2_Identifiers[beziersegment.Start])
+			pointersInitializesStatements += setPointerField
+		}
+
+		if beziersegment.ControlPointStart != nil {
+			setPointerField = PointerFieldInitStatement
+			setPointerField = strings.ReplaceAll(setPointerField, "{{Identifier}}", id)
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "ControlPointStart")
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldNameValue}}", map_Vector2_Identifiers[beziersegment.ControlPointStart])
+			pointersInitializesStatements += setPointerField
+		}
+
+		if beziersegment.ControlPointEnd != nil {
+			setPointerField = PointerFieldInitStatement
+			setPointerField = strings.ReplaceAll(setPointerField, "{{Identifier}}", id)
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "ControlPointEnd")
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldNameValue}}", map_Vector2_Identifiers[beziersegment.ControlPointEnd])
+			pointersInitializesStatements += setPointerField
+		}
+
+		if beziersegment.End != nil {
+			setPointerField = PointerFieldInitStatement
+			setPointerField = strings.ReplaceAll(setPointerField, "{{Identifier}}", id)
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "End")
+			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldNameValue}}", map_Vector2_Identifiers[beziersegment.End])
+			pointersInitializesStatements += setPointerField
+		}
+
+	}
+
+	for idx, vector2 := range vector2Ordered {
+		var setPointerField string
+		_ = setPointerField
+
+		id = generatesIdentifier("Vector2", idx, vector2.Name)
+		map_Vector2_Identifiers[vector2] = id
 
 		// Initialisation of values
 	}

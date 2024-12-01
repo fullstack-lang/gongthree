@@ -314,8 +314,9 @@ func ParseAstFileFromAst(stage *StageStruct, inFile *ast.File, fset *token.FileS
 var __gong__map_Indentifiers_gongstructName = make(map[string]string)
 
 // insertion point for identifiers maps
-var __gong__map_Country = make(map[string]*Country)
-var __gong__map_Hello = make(map[string]*Hello)
+var __gong__map_BezierCurve = make(map[string]*BezierCurve)
+var __gong__map_BezierSegment = make(map[string]*BezierSegment)
+var __gong__map_Vector2 = make(map[string]*Vector2)
 
 // Parser needs to be configured for having the [Name1.Name2] or [pkg.Name1] ...
 // to be recognized as a proper identifier.
@@ -488,18 +489,24 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 									// this is the place where an instance is created
 									switch gongstructName {
 									// insertion point for identifiers
-									case "Country":
-										instanceCountry := new(Country)
-										instanceCountry.Name = instanceName
-										instanceCountry.Stage(stage)
-										instance = any(instanceCountry)
-										__gong__map_Country[identifier] = instanceCountry
-									case "Hello":
-										instanceHello := new(Hello)
-										instanceHello.Name = instanceName
-										instanceHello.Stage(stage)
-										instance = any(instanceHello)
-										__gong__map_Hello[identifier] = instanceHello
+									case "BezierCurve":
+										instanceBezierCurve := new(BezierCurve)
+										instanceBezierCurve.Name = instanceName
+										instanceBezierCurve.Stage(stage)
+										instance = any(instanceBezierCurve)
+										__gong__map_BezierCurve[identifier] = instanceBezierCurve
+									case "BezierSegment":
+										instanceBezierSegment := new(BezierSegment)
+										instanceBezierSegment.Name = instanceName
+										instanceBezierSegment.Stage(stage)
+										instance = any(instanceBezierSegment)
+										__gong__map_BezierSegment[identifier] = instanceBezierSegment
+									case "Vector2":
+										instanceVector2 := new(Vector2)
+										instanceVector2.Name = instanceName
+										instanceVector2.Stage(stage)
+										instance = any(instanceVector2)
+										__gong__map_Vector2[identifier] = instanceVector2
 									}
 									__gong__map_Indentifiers_gongstructName[identifier] = gongstructName
 									return
@@ -536,11 +543,15 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 						}
 						switch gongstructName {
 						// insertion point for basic lit assignments
-						case "Country":
+						case "BezierCurve":
 							switch fieldName {
 							// insertion point for date assign code
 							}
-						case "Hello":
+						case "BezierSegment":
+							switch fieldName {
+							// insertion point for date assign code
+							}
+						case "Vector2":
 							switch fieldName {
 							// insertion point for date assign code
 							}
@@ -569,17 +580,21 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 					}
 					switch gongstructName {
 					// insertion point for slice of pointers assignments
-					case "Country":
+					case "BezierCurve":
 						switch fieldName {
 						// insertion point for slice of pointers assign code
-						case "AlternateHellos":
+						case "BezierSegments":
 							// remove first and last char
 							targetIdentifier := ident.Name
-							target := __gong__map_Hello[targetIdentifier]
-							__gong__map_Country[identifier].AlternateHellos =
-								append(__gong__map_Country[identifier].AlternateHellos, target)
+							target := __gong__map_BezierSegment[targetIdentifier]
+							__gong__map_BezierCurve[identifier].BezierSegments =
+								append(__gong__map_BezierCurve[identifier].BezierSegments, target)
 						}
-					case "Hello":
+					case "BezierSegment":
+						switch fieldName {
+						// insertion point for slice of pointers assign code
+						}
+					case "Vector2":
 						switch fieldName {
 						// insertion point for slice of pointers assign code
 						}
@@ -632,21 +647,43 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 
 			switch gongstructName {
 			// insertion point for basic lit assignments
-			case "Country":
+			case "BezierCurve":
 				switch fieldName {
 				// insertion point for field dependant code
 				case "Name":
 					// remove first and last char
 					fielValue := basicLit.Value[1 : len(basicLit.Value)-1]
-					__gong__map_Country[identifier].Name = fielValue
+					__gong__map_BezierCurve[identifier].Name = fielValue
 				}
-			case "Hello":
+			case "BezierSegment":
 				switch fieldName {
 				// insertion point for field dependant code
 				case "Name":
 					// remove first and last char
 					fielValue := basicLit.Value[1 : len(basicLit.Value)-1]
-					__gong__map_Hello[identifier].Name = fielValue
+					__gong__map_BezierSegment[identifier].Name = fielValue
+				}
+			case "Vector2":
+				switch fieldName {
+				// insertion point for field dependant code
+				case "Name":
+					// remove first and last char
+					fielValue := basicLit.Value[1 : len(basicLit.Value)-1]
+					__gong__map_Vector2[identifier].Name = fielValue
+				case "X":
+					// convert string to float64
+					fielValue, err := strconv.ParseFloat(basicLit.Value, 64)
+					if err != nil {
+						log.Fatalln(err)
+					}
+					__gong__map_Vector2[identifier].X = exprSign * fielValue
+				case "Y":
+					// convert string to float64
+					fielValue, err := strconv.ParseFloat(basicLit.Value, 64)
+					if err != nil {
+						log.Fatalln(err)
+					}
+					__gong__map_Vector2[identifier].Y = exprSign * fielValue
 				}
 			}
 		case *ast.Ident:
@@ -662,14 +699,27 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 			}
 			switch gongstructName {
 			// insertion point for bool & pointers assignments
-			case "Country":
+			case "BezierCurve":
 				switch fieldName {
 				// insertion point for field dependant code
-				case "Hello":
-					targetIdentifier := ident.Name
-					__gong__map_Country[identifier].Hello = __gong__map_Hello[targetIdentifier]
 				}
-			case "Hello":
+			case "BezierSegment":
+				switch fieldName {
+				// insertion point for field dependant code
+				case "Start":
+					targetIdentifier := ident.Name
+					__gong__map_BezierSegment[identifier].Start = __gong__map_Vector2[targetIdentifier]
+				case "ControlPointStart":
+					targetIdentifier := ident.Name
+					__gong__map_BezierSegment[identifier].ControlPointStart = __gong__map_Vector2[targetIdentifier]
+				case "ControlPointEnd":
+					targetIdentifier := ident.Name
+					__gong__map_BezierSegment[identifier].ControlPointEnd = __gong__map_Vector2[targetIdentifier]
+				case "End":
+					targetIdentifier := ident.Name
+					__gong__map_BezierSegment[identifier].End = __gong__map_Vector2[targetIdentifier]
+				}
+			case "Vector2":
 				switch fieldName {
 				// insertion point for field dependant code
 				}
@@ -701,11 +751,15 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 				_ = enumValue
 				switch gongstructName {
 				// insertion point for enums assignments
-				case "Country":
+				case "BezierCurve":
 					switch fieldName {
 					// insertion point for enum assign code
 					}
-				case "Hello":
+				case "BezierSegment":
+					switch fieldName {
+					// insertion point for enum assign code
+					}
+				case "Vector2":
 					switch fieldName {
 					// insertion point for enum assign code
 					}

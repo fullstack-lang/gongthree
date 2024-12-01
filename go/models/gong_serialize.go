@@ -14,8 +14,9 @@ func SerializeStage(stage *StageStruct, filename string) {
 	f := excelize.NewFile()
 	{
 		// insertion point
-		SerializeExcelize[Country](stage, f)
-		SerializeExcelize[Hello](stage, f)
+		SerializeExcelize[BezierCurve](stage, f)
+		SerializeExcelize[BezierSegment](stage, f)
+		SerializeExcelize[Vector2](stage, f)
 	}
 
 	var tab ExcelizeTabulator

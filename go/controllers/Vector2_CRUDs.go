@@ -14,16 +14,16 @@ import (
 )
 
 // declaration in order to justify use of the models import
-var __Hello__dummysDeclaration__ models.Hello
-var __Hello_time__dummyDeclaration time.Duration
+var __Vector2__dummysDeclaration__ models.Vector2
+var __Vector2_time__dummyDeclaration time.Duration
 
-var mutexHello sync.Mutex
+var mutexVector2 sync.Mutex
 
-// An HelloID parameter model.
+// An Vector2ID parameter model.
 //
 // This is used for operations that want the ID of an order in the path
-// swagger:parameters getHello updateHello deleteHello
-type HelloID struct {
+// swagger:parameters getVector2 updateVector2 deleteVector2
+type Vector2ID struct {
 	// The ID of the order
 	//
 	// in: path
@@ -31,29 +31,29 @@ type HelloID struct {
 	ID int64
 }
 
-// HelloInput is a schema that can validate the user’s
+// Vector2Input is a schema that can validate the user’s
 // input to prevent us from getting invalid data
-// swagger:parameters postHello updateHello
-type HelloInput struct {
-	// The Hello to submit or modify
+// swagger:parameters postVector2 updateVector2
+type Vector2Input struct {
+	// The Vector2 to submit or modify
 	// in: body
-	Hello *orm.HelloAPI
+	Vector2 *orm.Vector2API
 }
 
-// GetHellos
+// GetVector2s
 //
-// swagger:route GET /hellos hellos getHellos
+// swagger:route GET /vector2s vector2s getVector2s
 //
-// # Get all hellos
+// # Get all vector2s
 //
 // Responses:
 // default: genericError
 //
-//	200: helloDBResponse
-func (controller *Controller) GetHellos(c *gin.Context) {
+//	200: vector2DBResponse
+func (controller *Controller) GetVector2s(c *gin.Context) {
 
 	// source slice
-	var helloDBs []orm.HelloDB
+	var vector2DBs []orm.Vector2DB
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -61,16 +61,16 @@ func (controller *Controller) GetHellos(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("GetHellos", "GONG__StackPath", stackPath)
+			// log.Println("GetVector2s", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoHello.GetDB()
+	db := backRepo.BackRepoVector2.GetDB()
 
-	_, err := db.Find(&helloDBs)
+	_, err := db.Find(&vector2DBs)
 	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -81,29 +81,29 @@ func (controller *Controller) GetHellos(c *gin.Context) {
 	}
 
 	// slice that will be transmitted to the front
-	helloAPIs := make([]orm.HelloAPI, 0)
+	vector2APIs := make([]orm.Vector2API, 0)
 
-	// for each hello, update fields from the database nullable fields
-	for idx := range helloDBs {
-		helloDB := &helloDBs[idx]
-		_ = helloDB
-		var helloAPI orm.HelloAPI
+	// for each vector2, update fields from the database nullable fields
+	for idx := range vector2DBs {
+		vector2DB := &vector2DBs[idx]
+		_ = vector2DB
+		var vector2API orm.Vector2API
 
 		// insertion point for updating fields
-		helloAPI.ID = helloDB.ID
-		helloDB.CopyBasicFieldsToHello_WOP(&helloAPI.Hello_WOP)
-		helloAPI.HelloPointersEncoding = helloDB.HelloPointersEncoding
-		helloAPIs = append(helloAPIs, helloAPI)
+		vector2API.ID = vector2DB.ID
+		vector2DB.CopyBasicFieldsToVector2_WOP(&vector2API.Vector2_WOP)
+		vector2API.Vector2PointersEncoding = vector2DB.Vector2PointersEncoding
+		vector2APIs = append(vector2APIs, vector2API)
 	}
 
-	c.JSON(http.StatusOK, helloAPIs)
+	c.JSON(http.StatusOK, vector2APIs)
 }
 
-// PostHello
+// PostVector2
 //
-// swagger:route POST /hellos hellos postHello
+// swagger:route POST /vector2s vector2s postVector2
 //
-// Creates a hello
+// Creates a vector2
 //
 //	Consumes:
 //	- application/json
@@ -113,10 +113,10 @@ func (controller *Controller) GetHellos(c *gin.Context) {
 //
 //	Responses:
 //	  200: nodeDBResponse
-func (controller *Controller) PostHello(c *gin.Context) {
+func (controller *Controller) PostVector2(c *gin.Context) {
 
-	mutexHello.Lock()
-	defer mutexHello.Unlock()
+	mutexVector2.Lock()
+	defer mutexVector2.Unlock()
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -124,17 +124,17 @@ func (controller *Controller) PostHello(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("PostHellos", "GONG__StackPath", stackPath)
+			// log.Println("PostVector2s", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoHello.GetDB()
+	db := backRepo.BackRepoVector2.GetDB()
 
 	// Validate input
-	var input orm.HelloAPI
+	var input orm.Vector2API
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -146,12 +146,12 @@ func (controller *Controller) PostHello(c *gin.Context) {
 		return
 	}
 
-	// Create hello
-	helloDB := orm.HelloDB{}
-	helloDB.HelloPointersEncoding = input.HelloPointersEncoding
-	helloDB.CopyBasicFieldsFromHello_WOP(&input.Hello_WOP)
+	// Create vector2
+	vector2DB := orm.Vector2DB{}
+	vector2DB.Vector2PointersEncoding = input.Vector2PointersEncoding
+	vector2DB.CopyBasicFieldsFromVector2_WOP(&input.Vector2_WOP)
 
-	_, err = db.Create(&helloDB)
+	_, err = db.Create(&vector2DB)
 	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -162,31 +162,31 @@ func (controller *Controller) PostHello(c *gin.Context) {
 	}
 
 	// get an instance (not staged) from DB instance, and call callback function
-	backRepo.BackRepoHello.CheckoutPhaseOneInstance(&helloDB)
-	hello := backRepo.BackRepoHello.Map_HelloDBID_HelloPtr[helloDB.ID]
+	backRepo.BackRepoVector2.CheckoutPhaseOneInstance(&vector2DB)
+	vector2 := backRepo.BackRepoVector2.Map_Vector2DBID_Vector2Ptr[vector2DB.ID]
 
-	if hello != nil {
-		models.AfterCreateFromFront(backRepo.GetStage(), hello)
+	if vector2 != nil {
+		models.AfterCreateFromFront(backRepo.GetStage(), vector2)
 	}
 
 	// a POST is equivalent to a back repo commit increase
 	// (this will be improved with implementation of unit of work design pattern)
 	backRepo.IncrementPushFromFrontNb()
 
-	c.JSON(http.StatusOK, helloDB)
+	c.JSON(http.StatusOK, vector2DB)
 }
 
-// GetHello
+// GetVector2
 //
-// swagger:route GET /hellos/{ID} hellos getHello
+// swagger:route GET /vector2s/{ID} vector2s getVector2
 //
-// Gets the details for a hello.
+// Gets the details for a vector2.
 //
 // Responses:
 // default: genericError
 //
-//	200: helloDBResponse
-func (controller *Controller) GetHello(c *gin.Context) {
+//	200: vector2DBResponse
+func (controller *Controller) GetVector2(c *gin.Context) {
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -194,18 +194,18 @@ func (controller *Controller) GetHello(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("GetHello", "GONG__StackPath", stackPath)
+			// log.Println("GetVector2", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoHello.GetDB()
+	db := backRepo.BackRepoVector2.GetDB()
 
-	// Get helloDB in DB
-	var helloDB orm.HelloDB
-	if _, err := db.First(&helloDB, c.Param("id")); err != nil {
+	// Get vector2DB in DB
+	var vector2DB orm.Vector2DB
+	if _, err := db.First(&vector2DB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -214,28 +214,28 @@ func (controller *Controller) GetHello(c *gin.Context) {
 		return
 	}
 
-	var helloAPI orm.HelloAPI
-	helloAPI.ID = helloDB.ID
-	helloAPI.HelloPointersEncoding = helloDB.HelloPointersEncoding
-	helloDB.CopyBasicFieldsToHello_WOP(&helloAPI.Hello_WOP)
+	var vector2API orm.Vector2API
+	vector2API.ID = vector2DB.ID
+	vector2API.Vector2PointersEncoding = vector2DB.Vector2PointersEncoding
+	vector2DB.CopyBasicFieldsToVector2_WOP(&vector2API.Vector2_WOP)
 
-	c.JSON(http.StatusOK, helloAPI)
+	c.JSON(http.StatusOK, vector2API)
 }
 
-// UpdateHello
+// UpdateVector2
 //
-// swagger:route PATCH /hellos/{ID} hellos updateHello
+// swagger:route PATCH /vector2s/{ID} vector2s updateVector2
 //
-// # Update a hello
+// # Update a vector2
 //
 // Responses:
 // default: genericError
 //
-//	200: helloDBResponse
-func (controller *Controller) UpdateHello(c *gin.Context) {
+//	200: vector2DBResponse
+func (controller *Controller) UpdateVector2(c *gin.Context) {
 
-	mutexHello.Lock()
-	defer mutexHello.Unlock()
+	mutexVector2.Lock()
+	defer mutexVector2.Unlock()
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -243,17 +243,17 @@ func (controller *Controller) UpdateHello(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("UpdateHello", "GONG__StackPath", stackPath)
+			// log.Println("UpdateVector2", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoHello.GetDB()
+	db := backRepo.BackRepoVector2.GetDB()
 
 	// Validate input
-	var input orm.HelloAPI
+	var input orm.Vector2API
 	if err := c.ShouldBindJSON(&input); err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -261,10 +261,10 @@ func (controller *Controller) UpdateHello(c *gin.Context) {
 	}
 
 	// Get model if exist
-	var helloDB orm.HelloDB
+	var vector2DB orm.Vector2DB
 
-	// fetch the hello
-	_, err := db.First(&helloDB, c.Param("id"))
+	// fetch the vector2
+	_, err := db.First(&vector2DB, c.Param("id"))
 
 	if err != nil {
 		var returnError GenericError
@@ -276,11 +276,11 @@ func (controller *Controller) UpdateHello(c *gin.Context) {
 	}
 
 	// update
-	helloDB.CopyBasicFieldsFromHello_WOP(&input.Hello_WOP)
-	helloDB.HelloPointersEncoding = input.HelloPointersEncoding
+	vector2DB.CopyBasicFieldsFromVector2_WOP(&input.Vector2_WOP)
+	vector2DB.Vector2PointersEncoding = input.Vector2PointersEncoding
 
-	db, _ = db.Model(&helloDB)
-	_, err = db.Updates(&helloDB)
+	db, _ = db.Model(&vector2DB)
+	_, err = db.Updates(&vector2DB)
 	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -291,16 +291,16 @@ func (controller *Controller) UpdateHello(c *gin.Context) {
 	}
 
 	// get an instance (not staged) from DB instance, and call callback function
-	helloNew := new(models.Hello)
-	helloDB.CopyBasicFieldsToHello(helloNew)
+	vector2New := new(models.Vector2)
+	vector2DB.CopyBasicFieldsToVector2(vector2New)
 
 	// redeem pointers
-	helloDB.DecodePointers(backRepo, helloNew)
+	vector2DB.DecodePointers(backRepo, vector2New)
 
 	// get stage instance from DB instance, and call callback function
-	helloOld := backRepo.BackRepoHello.Map_HelloDBID_HelloPtr[helloDB.ID]
-	if helloOld != nil {
-		models.AfterUpdateFromFront(backRepo.GetStage(), helloOld, helloNew)
+	vector2Old := backRepo.BackRepoVector2.Map_Vector2DBID_Vector2Ptr[vector2DB.ID]
+	if vector2Old != nil {
+		models.AfterUpdateFromFront(backRepo.GetStage(), vector2Old, vector2New)
 	}
 
 	// an UPDATE generates a back repo commit increase
@@ -309,23 +309,23 @@ func (controller *Controller) UpdateHello(c *gin.Context) {
 	// generates a checkout
 	backRepo.IncrementPushFromFrontNb()
 
-	// return status OK with the marshalling of the the helloDB
-	c.JSON(http.StatusOK, helloDB)
+	// return status OK with the marshalling of the the vector2DB
+	c.JSON(http.StatusOK, vector2DB)
 }
 
-// DeleteHello
+// DeleteVector2
 //
-// swagger:route DELETE /hellos/{ID} hellos deleteHello
+// swagger:route DELETE /vector2s/{ID} vector2s deleteVector2
 //
-// # Delete a hello
+// # Delete a vector2
 //
 // default: genericError
 //
-//	200: helloDBResponse
-func (controller *Controller) DeleteHello(c *gin.Context) {
+//	200: vector2DBResponse
+func (controller *Controller) DeleteVector2(c *gin.Context) {
 
-	mutexHello.Lock()
-	defer mutexHello.Unlock()
+	mutexVector2.Lock()
+	defer mutexVector2.Unlock()
 
 	_values := c.Request.URL.Query()
 	stackPath := ""
@@ -333,18 +333,18 @@ func (controller *Controller) DeleteHello(c *gin.Context) {
 		value := _values["GONG__StackPath"]
 		if len(value) == 1 {
 			stackPath = value[0]
-			// log.Println("DeleteHello", "GONG__StackPath", stackPath)
+			// log.Println("DeleteVector2", "GONG__StackPath", stackPath)
 		}
 	}
 	backRepo := controller.Map_BackRepos[stackPath]
 	if backRepo == nil {
 		log.Panic("Stack github.com/fullstack-lang/gongthree/go/models, Unkown stack", stackPath)
 	}
-	db := backRepo.BackRepoHello.GetDB()
+	db := backRepo.BackRepoVector2.GetDB()
 
 	// Get model if exist
-	var helloDB orm.HelloDB
-	if _, err := db.First(&helloDB, c.Param("id")); err != nil {
+	var vector2DB orm.Vector2DB
+	if _, err := db.First(&vector2DB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -355,16 +355,16 @@ func (controller *Controller) DeleteHello(c *gin.Context) {
 
 	// with gorm.Model field, default delete is a soft delete. Unscoped() force delete
 	db.Unscoped()
-	db.Delete(&helloDB)
+	db.Delete(&vector2DB)
 
 	// get an instance (not staged) from DB instance, and call callback function
-	helloDeleted := new(models.Hello)
-	helloDB.CopyBasicFieldsToHello(helloDeleted)
+	vector2Deleted := new(models.Vector2)
+	vector2DB.CopyBasicFieldsToVector2(vector2Deleted)
 
 	// get stage instance from DB instance, and call callback function
-	helloStaged := backRepo.BackRepoHello.Map_HelloDBID_HelloPtr[helloDB.ID]
-	if helloStaged != nil {
-		models.AfterDeleteFromFront(backRepo.GetStage(), helloStaged, helloDeleted)
+	vector2Staged := backRepo.BackRepoVector2.Map_Vector2DBID_Vector2Ptr[vector2DB.ID]
+	if vector2Staged != nil {
+		models.AfterDeleteFromFront(backRepo.GetStage(), vector2Staged, vector2Deleted)
 	}
 
 	// a DELETE generates a back repo commit increase

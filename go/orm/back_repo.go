@@ -24,9 +24,11 @@ import (
 // BackRepoStruct supports callback functions
 type BackRepoStruct struct {
 	// insertion point for per struct back repo declarations
-	BackRepoCountry BackRepoCountryStruct
+	BackRepoBezierCurve BackRepoBezierCurveStruct
 
-	BackRepoHello BackRepoHelloStruct
+	BackRepoBezierSegment BackRepoBezierSegmentStruct
+
+	BackRepoVector2 BackRepoVector2Struct
 
 	CommitFromBackNb uint // records commit increments when performed by the back
 
@@ -49,26 +51,35 @@ func NewBackRepo(stage *models.StageStruct, filename string) (backRepo *BackRepo
 
 	/* THIS IS REMOVED BY GONG COMPILER IF TARGET IS gorm
 	db = dbgorm.NewDBWrapper(filename, "github_com_fullstack_lang_gongthree_go",
-		&CountryDB{},
-		&HelloDB{},
+		&BezierCurveDB{},
+		&BezierSegmentDB{},
+		&Vector2DB{},
 	)
 	THIS IS REMOVED BY GONG COMPILER IF TARGET IS gorm */
 
 	backRepo = new(BackRepoStruct)
 
 	// insertion point for per struct back repo declarations
-	backRepo.BackRepoCountry = BackRepoCountryStruct{
-		Map_CountryDBID_CountryPtr: make(map[uint]*models.Country, 0),
-		Map_CountryDBID_CountryDB:  make(map[uint]*CountryDB, 0),
-		Map_CountryPtr_CountryDBID: make(map[*models.Country]uint, 0),
+	backRepo.BackRepoBezierCurve = BackRepoBezierCurveStruct{
+		Map_BezierCurveDBID_BezierCurvePtr: make(map[uint]*models.BezierCurve, 0),
+		Map_BezierCurveDBID_BezierCurveDB:  make(map[uint]*BezierCurveDB, 0),
+		Map_BezierCurvePtr_BezierCurveDBID: make(map[*models.BezierCurve]uint, 0),
 
 		db:    db,
 		stage: stage,
 	}
-	backRepo.BackRepoHello = BackRepoHelloStruct{
-		Map_HelloDBID_HelloPtr: make(map[uint]*models.Hello, 0),
-		Map_HelloDBID_HelloDB:  make(map[uint]*HelloDB, 0),
-		Map_HelloPtr_HelloDBID: make(map[*models.Hello]uint, 0),
+	backRepo.BackRepoBezierSegment = BackRepoBezierSegmentStruct{
+		Map_BezierSegmentDBID_BezierSegmentPtr: make(map[uint]*models.BezierSegment, 0),
+		Map_BezierSegmentDBID_BezierSegmentDB:  make(map[uint]*BezierSegmentDB, 0),
+		Map_BezierSegmentPtr_BezierSegmentDBID: make(map[*models.BezierSegment]uint, 0),
+
+		db:    db,
+		stage: stage,
+	}
+	backRepo.BackRepoVector2 = BackRepoVector2Struct{
+		Map_Vector2DBID_Vector2Ptr: make(map[uint]*models.Vector2, 0),
+		Map_Vector2DBID_Vector2DB:  make(map[uint]*Vector2DB, 0),
+		Map_Vector2Ptr_Vector2DBID: make(map[*models.Vector2]uint, 0),
 
 		db:    db,
 		stage: stage,
@@ -126,12 +137,14 @@ func (backRepo *BackRepoStruct) Commit(stage *models.StageStruct) {
 	defer backRepo.rwMutex.Unlock()
 
 	// insertion point for per struct back repo phase one commit
-	backRepo.BackRepoCountry.CommitPhaseOne(stage)
-	backRepo.BackRepoHello.CommitPhaseOne(stage)
+	backRepo.BackRepoBezierCurve.CommitPhaseOne(stage)
+	backRepo.BackRepoBezierSegment.CommitPhaseOne(stage)
+	backRepo.BackRepoVector2.CommitPhaseOne(stage)
 
 	// insertion point for per struct back repo phase two commit
-	backRepo.BackRepoCountry.CommitPhaseTwo(backRepo)
-	backRepo.BackRepoHello.CommitPhaseTwo(backRepo)
+	backRepo.BackRepoBezierCurve.CommitPhaseTwo(backRepo)
+	backRepo.BackRepoBezierSegment.CommitPhaseTwo(backRepo)
+	backRepo.BackRepoVector2.CommitPhaseTwo(backRepo)
 
 	backRepo.IncrementCommitFromBackNb()
 }
@@ -139,12 +152,14 @@ func (backRepo *BackRepoStruct) Commit(stage *models.StageStruct) {
 // Checkout the database into the stage
 func (backRepo *BackRepoStruct) Checkout(stage *models.StageStruct) {
 	// insertion point for per struct back repo phase one commit
-	backRepo.BackRepoCountry.CheckoutPhaseOne()
-	backRepo.BackRepoHello.CheckoutPhaseOne()
+	backRepo.BackRepoBezierCurve.CheckoutPhaseOne()
+	backRepo.BackRepoBezierSegment.CheckoutPhaseOne()
+	backRepo.BackRepoVector2.CheckoutPhaseOne()
 
 	// insertion point for per struct back repo phase two commit
-	backRepo.BackRepoCountry.CheckoutPhaseTwo(backRepo)
-	backRepo.BackRepoHello.CheckoutPhaseTwo(backRepo)
+	backRepo.BackRepoBezierCurve.CheckoutPhaseTwo(backRepo)
+	backRepo.BackRepoBezierSegment.CheckoutPhaseTwo(backRepo)
+	backRepo.BackRepoVector2.CheckoutPhaseTwo(backRepo)
 }
 
 // Backup the BackRepoStruct
@@ -152,8 +167,9 @@ func (backRepo *BackRepoStruct) Backup(stage *models.StageStruct, dirPath string
 	os.MkdirAll(dirPath, os.ModePerm)
 
 	// insertion point for per struct backup
-	backRepo.BackRepoCountry.Backup(dirPath)
-	backRepo.BackRepoHello.Backup(dirPath)
+	backRepo.BackRepoBezierCurve.Backup(dirPath)
+	backRepo.BackRepoBezierSegment.Backup(dirPath)
+	backRepo.BackRepoVector2.Backup(dirPath)
 }
 
 // Backup in XL the BackRepoStruct
@@ -164,8 +180,9 @@ func (backRepo *BackRepoStruct) BackupXL(stage *models.StageStruct, dirPath stri
 	file := xlsx.NewFile()
 
 	// insertion point for per struct backup
-	backRepo.BackRepoCountry.BackupXL(file)
-	backRepo.BackRepoHello.BackupXL(file)
+	backRepo.BackRepoBezierCurve.BackupXL(file)
+	backRepo.BackRepoBezierSegment.BackupXL(file)
+	backRepo.BackRepoVector2.BackupXL(file)
 
 	var b bytes.Buffer
 	writer := bufio.NewWriter(&b)
@@ -190,16 +207,18 @@ func (backRepo *BackRepoStruct) Restore(stage *models.StageStruct, dirPath strin
 	//
 
 	// insertion point for per struct backup
-	backRepo.BackRepoCountry.RestorePhaseOne(dirPath)
-	backRepo.BackRepoHello.RestorePhaseOne(dirPath)
+	backRepo.BackRepoBezierCurve.RestorePhaseOne(dirPath)
+	backRepo.BackRepoBezierSegment.RestorePhaseOne(dirPath)
+	backRepo.BackRepoVector2.RestorePhaseOne(dirPath)
 
 	//
 	// restauration second phase (reindex pointers with the new ID)
 	//
 
 	// insertion point for per struct backup
-	backRepo.BackRepoCountry.RestorePhaseTwo()
-	backRepo.BackRepoHello.RestorePhaseTwo()
+	backRepo.BackRepoBezierCurve.RestorePhaseTwo()
+	backRepo.BackRepoBezierSegment.RestorePhaseTwo()
+	backRepo.BackRepoVector2.RestorePhaseTwo()
 
 	backRepo.stage.Checkout()
 }
@@ -227,8 +246,9 @@ func (backRepo *BackRepoStruct) RestoreXL(stage *models.StageStruct, dirPath str
 	//
 
 	// insertion point for per struct backup
-	backRepo.BackRepoCountry.RestoreXLPhaseOne(file)
-	backRepo.BackRepoHello.RestoreXLPhaseOne(file)
+	backRepo.BackRepoBezierCurve.RestoreXLPhaseOne(file)
+	backRepo.BackRepoBezierSegment.RestoreXLPhaseOne(file)
+	backRepo.BackRepoVector2.RestoreXLPhaseOne(file)
 
 	// commit the restored stage
 	backRepo.stage.Commit()

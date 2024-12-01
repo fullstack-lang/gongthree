@@ -18,39 +18,51 @@ func FillUpForm[T models.Gongstruct](
 
 	switch instanceWithInferedType := any(instance).(type) {
 	// insertion point
-	case *models.Country:
+	case *models.BezierCurve:
 		// insertion point
 		BasicFieldtoForm("Name", instanceWithInferedType.Name, instanceWithInferedType, probe.formStage, formGroup,
 			false, false, 0, false, 0)
-		AssociationFieldToForm("Hello", instanceWithInferedType.Hello, formGroup, probe)
-		AssociationSliceToForm("AlternateHellos", instanceWithInferedType, &instanceWithInferedType.AlternateHellos, formGroup, probe)
+		AssociationSliceToForm("BezierSegments", instanceWithInferedType, &instanceWithInferedType.BezierSegments, formGroup, probe)
 
-	case *models.Hello:
+	case *models.BezierSegment:
 		// insertion point
 		BasicFieldtoForm("Name", instanceWithInferedType.Name, instanceWithInferedType, probe.formStage, formGroup,
 			false, false, 0, false, 0)
+		AssociationFieldToForm("Start", instanceWithInferedType.Start, formGroup, probe)
+		AssociationFieldToForm("ControlPointStart", instanceWithInferedType.ControlPointStart, formGroup, probe)
+		AssociationFieldToForm("ControlPointEnd", instanceWithInferedType.ControlPointEnd, formGroup, probe)
+		AssociationFieldToForm("End", instanceWithInferedType.End, formGroup, probe)
 		{
 			var rf models.ReverseField
 			_ = rf
-			rf.GongstructName = "Country"
-			rf.Fieldname = "AlternateHellos"
+			rf.GongstructName = "BezierCurve"
+			rf.Fieldname = "BezierSegments"
 			reverseFieldOwner := orm.GetReverseFieldOwner(probe.stageOfInterest, probe.backRepoOfInterest, instanceWithInferedType, &rf)
 			if reverseFieldOwner != nil {
 				AssociationReverseFieldToForm(
-					reverseFieldOwner.(*models.Country),
-					"AlternateHellos",
+					reverseFieldOwner.(*models.BezierCurve),
+					"BezierSegments",
 					instanceWithInferedType,
 					formGroup,
 					probe)
 			} else {
-				AssociationReverseFieldToForm[*models.Country, *models.Hello](
+				AssociationReverseFieldToForm[*models.BezierCurve, *models.BezierSegment](
 					nil,
-					"AlternateHellos",
+					"BezierSegments",
 					instanceWithInferedType,
 					formGroup,
 					probe)
 			}
 		}
+
+	case *models.Vector2:
+		// insertion point
+		BasicFieldtoForm("Name", instanceWithInferedType.Name, instanceWithInferedType, probe.formStage, formGroup,
+			false, false, 0, false, 0)
+		BasicFieldtoForm("X", instanceWithInferedType.X, instanceWithInferedType, probe.formStage, formGroup,
+			false, false, 0, false, 0)
+		BasicFieldtoForm("Y", instanceWithInferedType.Y, instanceWithInferedType, probe.formStage, formGroup,
+			false, false, 0, false, 0)
 
 	default:
 		_ = instanceWithInferedType

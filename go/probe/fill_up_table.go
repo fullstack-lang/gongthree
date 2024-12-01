@@ -20,10 +20,12 @@ func fillUpTablePointerToGongstruct[T models.PointerToGongstruct](
 	var typedInstance T
 	switch any(typedInstance).(type) {
 	// insertion point
-	case *models.Country:
-		fillUpTable[models.Country](probe)
-	case *models.Hello:
-		fillUpTable[models.Hello](probe)
+	case *models.BezierCurve:
+		fillUpTable[models.BezierCurve](probe)
+	case *models.BezierSegment:
+		fillUpTable[models.BezierSegment](probe)
+	case *models.Vector2:
+		fillUpTable[models.Vector2](probe)
 	default:
 		log.Println("unknow type")
 	}

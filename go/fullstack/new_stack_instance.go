@@ -44,8 +44,9 @@ func NewStackInstance(
 
 	// add orchestration
 	// insertion point
-	models.SetOrchestratorOnAfterUpdate[models.Country](stage)
-	models.SetOrchestratorOnAfterUpdate[models.Hello](stage)
+	models.SetOrchestratorOnAfterUpdate[models.BezierCurve](stage)
+	models.SetOrchestratorOnAfterUpdate[models.BezierSegment](stage)
+	models.SetOrchestratorOnAfterUpdate[models.Vector2](stage)
 
 	return
 }
