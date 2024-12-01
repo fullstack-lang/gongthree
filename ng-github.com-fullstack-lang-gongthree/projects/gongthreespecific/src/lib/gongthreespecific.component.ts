@@ -2,7 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/co
 
 import * as THREE from 'three';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as gongthree from '../../../gongthree/src/public-api'
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { BezierSegment } from './bezier-segment';
 
 @Component({
@@ -22,12 +24,27 @@ export class GongthreespecificComponent {
   private controls!: OrbitControls;
   private animationFrameId?: number;
 
+  constructor(
+    private frontRepoService: gongthree.FrontRepoService,
+  ) { }
+  frontRepo: gongthree.FrontRepo | undefined
+  Stacknames = gongthree.StacksNames
+
   ngOnInit() {
-    this.initScene();
-    this.createObjects();
-    this.setupLighting();
-    this.setupControls();
-    this.animate();
+
+    this.frontRepoService.connectToWebSocket(gongthree.StacksNames.Gongthree).subscribe(
+      frontRepo => {
+        this.frontRepo = frontRepo
+
+        this.initScene();
+        this.createObjects();
+        this.setupLighting();
+        this.setupControls();
+        this.animate();
+      }
+    )
+
+
   }
 
   private initScene() {
@@ -52,12 +69,6 @@ export class GongthreespecificComponent {
   private createObjects() {
 
     // ['#D1C5B4', '#8FA382', '#536C87'],
-
-    // this.createRandomExtrudedShape(15, 0.5, 5, 0, "#D1C5B4")
-
-    // this.createRandomExtrudedShape(10, 0.5, 5, 1, "#8FA382")
-
-    // this.createRandomExtrudedShape(8, 0.5, 8, 2, "#536C87")
 
     // Define multiple bezier segments
     const bezierSegments: BezierSegment[] = [

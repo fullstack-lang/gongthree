@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 
+	gongthree_models "github.com/fullstack-lang/gongthree/go/models"
 	gongthree_stack "github.com/fullstack-lang/gongthree/go/stack"
 	gongthree_static "github.com/fullstack-lang/gongthree/go/static"
 )
@@ -33,7 +34,7 @@ func main() {
 	r := gongthree_static.ServeStaticFiles(*logGINFlag)
 
 	// setup stack
-	stack := gongthree_stack.NewStack(r, "gongthree", *unmarshallFromCode, *marshallOnCommit, "", *embeddedDiagrams, true)
+	stack := gongthree_stack.NewStack(r, gongthree_models.Gongthree.ToString(), *unmarshallFromCode, *marshallOnCommit, "", *embeddedDiagrams, true)
 	stack.Probe.Refresh()
 
 	log.Printf("Server ready serve on localhost:" + strconv.Itoa(*port))

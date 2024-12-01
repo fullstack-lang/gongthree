@@ -16,7 +16,7 @@
       ],
       "gongthreespecific": [
         "./dist/gongthreespecific"
-      ]
+      ],
     },
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,

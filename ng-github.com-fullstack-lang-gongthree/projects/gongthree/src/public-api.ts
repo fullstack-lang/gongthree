@@ -22,3 +22,4 @@ export * from './lib/hello'
 export * from './lib/hello.service'
 
 
+export * from './lib/StacksNames'
