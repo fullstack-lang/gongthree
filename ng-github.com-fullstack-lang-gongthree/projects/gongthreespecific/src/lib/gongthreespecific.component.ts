@@ -87,6 +87,10 @@ export class GongthreespecificComponent {
 
     // Add to the scene
     this.scene.add(hollowCylinder);
+
+    // Add axes helper
+    const axesHelper = new THREE.AxesHelper(2); // Length of the axes lines
+    this.scene.add(axesHelper);
   }
 
   private setupLighting() {
