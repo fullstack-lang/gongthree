@@ -146,8 +146,8 @@ export class GongthreespecificComponent {
     const variation = 0;
     const randomRadius = () => radius + (Math.random() * variation * 2 - variation);
 
-    const points = [];
-    const nbPoints = 3
+    const points: THREE.Vector2[] = [];
+    const nbPoints = 3; // Number of random points
     for (let i = 0; i < nbPoints; i++) {
       const angle = (i * Math.PI * 2) / nbPoints;
       const r = randomRadius();
@@ -156,19 +156,35 @@ export class GongthreespecificComponent {
       points.push(new THREE.Vector2(x, y));
     }
 
-    // Create a Bezier curve through the points
-    const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p.x, p.y, 0)), true);
-
-    // Convert the curve to a shape
+    // Convert points into Bézier segments
     const shape = new THREE.Shape();
-    const firstPoint = curve.getPointAt(0);
-    shape.moveTo(firstPoint.x, firstPoint.y);
+    const controlPointDistance = radius * 0.5; // Distance of control points from the curve points
 
-    const divisions = 50; // Smoothness of the shape
-    for (let i = 1; i <= divisions; i++) {
-      const point = curve.getPointAt(i / divisions);
-      shape.lineTo(point.x, point.y);
+    // Start with the first point
+    shape.moveTo(points[0].x, points[0].y);
+
+    for (let i = 0; i < points.length; i++) {
+      const p0 = points[i];
+      const p1 = points[(i + 1) % points.length]; // Next point (wrapping around)
+
+      // Vector from the center to p0
+      const tangent0 = new THREE.Vector2(-p0.y, p0.x).normalize(); // Rotate 90 degrees
+      const tangent1 = new THREE.Vector2(-p1.y, p1.x).normalize(); // Rotate 90 degrees
+
+      // Control points
+      const cp0 = new THREE.Vector2(
+        p0.x + tangent0.x * controlPointDistance,
+        p0.y + tangent0.y * controlPointDistance
+      );
+      const cp1 = new THREE.Vector2(
+        p1.x - tangent1.x * controlPointDistance,
+        p1.y - tangent1.y * controlPointDistance
+      );
+
+      // Cubic Bézier curve
+      shape.bezierCurveTo(cp0.x, cp0.y, cp1.x, cp1.y, p1.x, p1.y);
     }
+
     shape.closePath();
 
     // Extrude the shape along the Z-axis
@@ -185,5 +201,7 @@ export class GongthreespecificComponent {
     // Add the extruded shape to the scene
     this.scene.add(extrudedMesh);
   }
+
+
 
 }
