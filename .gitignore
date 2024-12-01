@@ -1,0 +1,4 @@
+node_modules
+
+go/cmd/gongthree/gongthree
+go/cmd/gongthree/__debug_bin*
