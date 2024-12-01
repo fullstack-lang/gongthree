@@ -37,7 +37,7 @@ export class GongthreespecificComponent {
     // Create camera
     const aspectRatio = this.getAspectRatio();
     this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    this.camera.position.z = 15;
+    this.camera.position.z = 25;
 
     // Create renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -54,7 +54,7 @@ export class GongthreespecificComponent {
     const outerRadius = 0.5;
     const wallThickness = 0.05;
     const innerRadius = outerRadius - wallThickness;
-    const height = 2;
+    const height = 5;
 
     // Define the outer shape (circle)
     const shape = new THREE.Shape();
@@ -77,18 +77,22 @@ export class GongthreespecificComponent {
     const hollowCylinderGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
     // Rotate the geometry to align it along the Y-axis
-    hollowCylinderGeometry.rotateX(Math.PI / 2);
+    // hollowCylinderGeometry.rotateX(Math.PI / 2);
 
     // Create the mesh
     const hollowCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
     const hollowCylinder = new THREE.Mesh(hollowCylinderGeometry, hollowCylinderMaterial);
-    hollowCylinder.position.set(1.5, 2, 0); // Position cylinder slightly to the right
+    hollowCylinder.position.set(0, 0, -0.5);
     hollowCylinder.position.y -= height / 2; // Adjust position since extrusion starts from z=0
 
     // Add to the scene
     this.scene.add(hollowCylinder);
 
-    this.createRandomExtrudedShape()
+    this.createRandomExtrudedShape(15, 0.5, 5, 0)
+
+    this.createRandomExtrudedShape(10, 0.5, 5, 1)
+
+    this.createRandomExtrudedShape(8, 0.5, 8, 2)
 
     // Add axes helper
     const axesHelper = new THREE.AxesHelper(2); // Length of the axes lines
@@ -140,14 +144,16 @@ export class GongthreespecificComponent {
     this.renderer.dispose();
   }
 
-  private createRandomExtrudedShape() {
+  private createRandomExtrudedShape(
+    refRadius: number,
+    variation: number,
+    nbPoints: number,
+    zOrig: number) {
     // Generate random points on a circle
-    const radius = 10;
-    const variation = 0;
+    const radius = refRadius;
     const randomRadius = () => radius + (Math.random() * variation * 2 - variation);
 
     const points: THREE.Vector2[] = [];
-    const nbPoints = 3; // Number of random points
     for (let i = 0; i < nbPoints; i++) {
       const angle = (i * Math.PI * 2) / nbPoints;
       const r = randomRadius();
@@ -198,9 +204,13 @@ export class GongthreespecificComponent {
     const material = new THREE.MeshStandardMaterial({ color: 0xff00ff });
     const extrudedMesh = new THREE.Mesh(extrudedGeometry, material);
 
+    // Set the position of the shape (including the Z parameter)
+    extrudedMesh.position.set(0, 0, zOrig)
+
     // Add the extruded shape to the scene
     this.scene.add(extrudedMesh);
   }
+
 
 
 
