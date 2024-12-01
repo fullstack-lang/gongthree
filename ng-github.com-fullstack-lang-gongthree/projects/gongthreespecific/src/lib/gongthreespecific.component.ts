@@ -77,11 +77,12 @@ export class GongthreespecificComponent {
     holePath.absarc(0, 0, innerRadius, 0, Math.PI * 2, true);
     shape.holes.push(holePath);
 
-    // Extrude settings
+    // Extrude settings with smooth rendering
     const extrudeSettings: THREE.ExtrudeGeometryOptions = {
       depth: height,
       bevelEnabled: false,
       steps: 1,
+      curveSegments: 64 // Increase the number of segments for smoothness
     };
 
     // Create the geometry
@@ -93,7 +94,7 @@ export class GongthreespecificComponent {
     // Create the mesh
     const hollowCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
     const hollowCylinder = new THREE.Mesh(hollowCylinderGeometry, hollowCylinderMaterial);
-    hollowCylinder.position.set(1.5, 0, 0); // Position cylinder slightly to the right
+    hollowCylinder.position.set(1.5, 2, 0); // Position cylinder slightly to the right
     hollowCylinder.position.y -= height / 2; // Adjust position since extrusion starts from z=0
 
     // Add to the scene
