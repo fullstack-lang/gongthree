@@ -71,32 +71,16 @@ export class GongthreespecificComponent {
     // ['#D1C5B4', '#8FA382', '#536C87'],
 
     // Define multiple bezier segments
-    const bezierSegments: BezierSegment[] = [
-      new BezierSegment(
-        new THREE.Vector2(-5, 4),
-        new THREE.Vector2(-2, 8),
-        new THREE.Vector2(2, 8),
-        new THREE.Vector2(5, 4)
-      ),
-      new BezierSegment(
-        new THREE.Vector2(5, 4),
-        new THREE.Vector2(18, 0),
-        new THREE.Vector2(8, -4),
-        new THREE.Vector2(5, -8)
-      ),
-      new BezierSegment(
-        new THREE.Vector2(5, -8),
-        new THREE.Vector2(2, -12),
-        new THREE.Vector2(-2, -12),
-        new THREE.Vector2(-5, -8)
-      ),
-      new BezierSegment(
-        new THREE.Vector2(-5, -8),
-        new THREE.Vector2(-8, -4),
-        new THREE.Vector2(-8, 0),
-        new THREE.Vector2(-5, 4)
-      ),
-    ];
+    let bezierSegments: BezierSegment[] = []
+
+    this.frontRepo?.array_BezierCurves.forEach(
+      bc => {
+        bc.BezierSegments.forEach(
+          bs =>
+            bezierSegments.push(convertToBezierSegment(bs))
+        )
+      }
+    )
 
     // Call the method with the array of segments
     this.createBezierShape(bezierSegments);
@@ -299,9 +283,21 @@ export class GongthreespecificComponent {
     );
     this.scene.add(wireframe);
   }
+}
 
+function convertToTHREEVector2(gongVector: gongthree.Vector2 | undefined): THREE.Vector2 {
+  if (gongVector) {
+    return new THREE.Vector2(gongVector.X, gongVector.Y);
+  } else {
+    return new THREE.Vector2(0, 0); // Or handle undefined appropriately
+  }
+}
 
+function convertToBezierSegment(gongBezierSegment: gongthree.BezierSegment): BezierSegment {
+  const start = convertToTHREEVector2(gongBezierSegment.Start);
+  const controlPointStart = convertToTHREEVector2(gongBezierSegment.ControlPointStart);
+  const controlPointEnd = convertToTHREEVector2(gongBezierSegment.ControlPointEnd);
+  const end = convertToTHREEVector2(gongBezierSegment.End);
 
-
-
+  return new BezierSegment(start, controlPointStart, controlPointEnd, end);
 }
