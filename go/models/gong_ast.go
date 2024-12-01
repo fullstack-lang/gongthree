@@ -654,6 +654,10 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 					// remove first and last char
 					fielValue := basicLit.Value[1 : len(basicLit.Value)-1]
 					__gong__map_BezierCurve[identifier].Name = fielValue
+				case "Color":
+					// remove first and last char
+					fielValue := basicLit.Value[1 : len(basicLit.Value)-1]
+					__gong__map_BezierCurve[identifier].Color = fielValue
 				}
 			case "BezierSegment":
 				switch fieldName {

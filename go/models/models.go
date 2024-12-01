@@ -17,4 +17,6 @@ type BezierCurve struct {
 	Name string
 
 	BezierSegments []*BezierSegment
+
+	Color string
 }

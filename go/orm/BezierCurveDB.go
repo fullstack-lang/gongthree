@@ -66,6 +66,9 @@ type BezierCurveDB struct {
 	// Declation for basic field beziercurveDB.Name
 	Name_Data sql.NullString
 
+	// Declation for basic field beziercurveDB.Color
+	Color_Data sql.NullString
+
 	// encoding of pointers
 	// for GORM serialization, it is necessary to embed to Pointer Encoding declaration
 	BezierCurvePointersEncoding
@@ -89,6 +92,8 @@ type BezierCurveWOP struct {
 	// insertion for WOP basic fields
 
 	Name string `xlsx:"1"`
+
+	Color string `xlsx:"2"`
 	// insertion for WOP pointer fields
 }
 
@@ -96,6 +101,7 @@ var BezierCurve_Fields = []string{
 	// insertion for WOP basic fields
 	"ID",
 	"Name",
+	"Color",
 }
 
 type BackRepoBezierCurveStruct struct {
@@ -392,6 +398,9 @@ func (beziercurveDB *BezierCurveDB) CopyBasicFieldsFromBezierCurve(beziercurve *
 
 	beziercurveDB.Name_Data.String = beziercurve.Name
 	beziercurveDB.Name_Data.Valid = true
+
+	beziercurveDB.Color_Data.String = beziercurve.Color
+	beziercurveDB.Color_Data.Valid = true
 }
 
 // CopyBasicFieldsFromBezierCurve_WOP
@@ -400,6 +409,9 @@ func (beziercurveDB *BezierCurveDB) CopyBasicFieldsFromBezierCurve_WOP(beziercur
 
 	beziercurveDB.Name_Data.String = beziercurve.Name
 	beziercurveDB.Name_Data.Valid = true
+
+	beziercurveDB.Color_Data.String = beziercurve.Color
+	beziercurveDB.Color_Data.Valid = true
 }
 
 // CopyBasicFieldsFromBezierCurveWOP
@@ -408,18 +420,23 @@ func (beziercurveDB *BezierCurveDB) CopyBasicFieldsFromBezierCurveWOP(beziercurv
 
 	beziercurveDB.Name_Data.String = beziercurve.Name
 	beziercurveDB.Name_Data.Valid = true
+
+	beziercurveDB.Color_Data.String = beziercurve.Color
+	beziercurveDB.Color_Data.Valid = true
 }
 
 // CopyBasicFieldsToBezierCurve
 func (beziercurveDB *BezierCurveDB) CopyBasicFieldsToBezierCurve(beziercurve *models.BezierCurve) {
 	// insertion point for checkout of basic fields (back repo to stage)
 	beziercurve.Name = beziercurveDB.Name_Data.String
+	beziercurve.Color = beziercurveDB.Color_Data.String
 }
 
 // CopyBasicFieldsToBezierCurve_WOP
 func (beziercurveDB *BezierCurveDB) CopyBasicFieldsToBezierCurve_WOP(beziercurve *models.BezierCurve_WOP) {
 	// insertion point for checkout of basic fields (back repo to stage)
 	beziercurve.Name = beziercurveDB.Name_Data.String
+	beziercurve.Color = beziercurveDB.Color_Data.String
 }
 
 // CopyBasicFieldsToBezierCurveWOP
@@ -427,6 +444,7 @@ func (beziercurveDB *BezierCurveDB) CopyBasicFieldsToBezierCurveWOP(beziercurve 
 	beziercurve.ID = int(beziercurveDB.ID)
 	// insertion point for checkout of basic fields (back repo to stage)
 	beziercurve.Name = beziercurveDB.Name_Data.String
+	beziercurve.Color = beziercurveDB.Color_Data.String
 }
 
 // Backup generates a json file from a slice of all BezierCurveDB instances in the backrepo

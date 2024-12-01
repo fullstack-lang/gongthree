@@ -19,6 +19,7 @@ export class BezierCurve {
 
 	// insertion point for basic fields declarations
 	Name: string = ""
+	Color: string = ""
 
 	// insertion point for pointers and slices of pointers declarations
 	BezierSegments: Array<BezierSegment> = []
@@ -32,6 +33,7 @@ export function CopyBezierCurveToBezierCurveAPI(beziercurve: BezierCurve, bezier
 
 	// insertion point for basic fields copy operations
 	beziercurveAPI.Name = beziercurve.Name
+	beziercurveAPI.Color = beziercurve.Color
 
 	// insertion point for pointer fields encoding
 
@@ -55,6 +57,7 @@ export function CopyBezierCurveAPIToBezierCurve(beziercurveAPI: BezierCurveAPI, 
 
 	// insertion point for basic fields copy operations
 	beziercurve.Name = beziercurveAPI.Name
+	beziercurve.Color = beziercurveAPI.Color
 
 	// insertion point for pointer fields encoding
 

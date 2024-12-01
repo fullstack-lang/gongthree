@@ -18,11 +18,3 @@ export class BezierSegment {
         this.End = End;
     }
 }
-
-// Usage:
-const bezierSegment = new BezierSegment(
-    new THREE.Vector2(-5, 4),
-    new THREE.Vector2(-2, 8),
-    new THREE.Vector2(2, 8),
-    new THREE.Vector2(5, 4)
-);

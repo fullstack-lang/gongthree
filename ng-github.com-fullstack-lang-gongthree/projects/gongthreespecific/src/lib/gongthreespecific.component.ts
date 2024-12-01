@@ -71,21 +71,19 @@ export class GongthreespecificComponent {
     // ['#D1C5B4', '#8FA382', '#536C87'],
 
     // Define multiple bezier segments
-    let bezierSegments: BezierSegment[] = []
 
     this.frontRepo?.array_BezierCurves.forEach(
       bc => {
+        let bezierSegments: BezierSegment[] = []
         bc.BezierSegments.forEach(
           bs =>
             bezierSegments.push(convertToBezierSegment(bs))
         )
+        // Call the method with the array of segments
+        this.createBezierShape(bezierSegments, bc.Color)
       }
+
     )
-
-    // Call the method with the array of segments
-    this.createBezierShape(bezierSegments);
-
-
 
     // Add axes helper
     const axesHelper = new THREE.AxesHelper(2); // Length of the axes lines
@@ -205,7 +203,7 @@ export class GongthreespecificComponent {
     this.scene.add(extrudedMesh);
   }
 
-  private createBezierShape(bezierSegments: BezierSegment[]) {
+  private createBezierShape(bezierSegments: BezierSegment[], color: string) {
     // Check if the array is not empty
     if (bezierSegments.length === 0) {
       console.warn('No bezier segments provided.');
@@ -262,7 +260,7 @@ export class GongthreespecificComponent {
     // Create geometry and material for the shape
     const geometry = new THREE.ShapeGeometry(shape);
     const material = new THREE.MeshStandardMaterial({
-      color: 0x8FA382,
+      color: color,
       side: THREE.DoubleSide,
       opacity: 1,
       transparent: false

@@ -63,6 +63,8 @@ func (beziercurveFormCallback *BezierCurveFormCallback) OnSave() {
 		// insertion point per field
 		case "Name":
 			FormDivBasicFieldToField(&(beziercurve_.Name), formDiv)
+		case "Color":
+			FormDivBasicFieldToField(&(beziercurve_.Color), formDiv)
 		}
 	}
 

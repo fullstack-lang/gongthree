@@ -14,6 +14,7 @@ export class BezierCurveAPI {
 
 	// insertion point for basic fields declarations
 	Name: string = ""
+	Color: string = ""
 
 	// insertion point for other decls
 

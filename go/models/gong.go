@@ -810,7 +810,7 @@ func GetFields[Type Gongstruct]() (res []string) {
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
 	case BezierCurve:
-		res = []string{"Name", "BezierSegments"}
+		res = []string{"Name", "BezierSegments", "Color"}
 	case BezierSegment:
 		res = []string{"Name", "Start", "ControlPointStart", "ControlPointEnd", "End"}
 	case Vector2:
@@ -857,7 +857,7 @@ func GetFieldsFromPointer[Type PointerToGongstruct]() (res []string) {
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
 	case *BezierCurve:
-		res = []string{"Name", "BezierSegments"}
+		res = []string{"Name", "BezierSegments", "Color"}
 	case *BezierSegment:
 		res = []string{"Name", "Start", "ControlPointStart", "ControlPointEnd", "End"}
 	case *Vector2:
@@ -882,6 +882,8 @@ func GetFieldStringValueFromPointer[Type PointerToGongstruct](instance Type, fie
 				}
 				res += __instance__.Name
 			}
+		case "Color":
+			res = inferedInstance.Color
 		}
 	case *BezierSegment:
 		switch fieldName {
@@ -937,6 +939,8 @@ func GetFieldStringValue[Type Gongstruct](instance Type, fieldName string) (res 
 				}
 				res += __instance__.Name
 			}
+		case "Color":
+			res = inferedInstance.Color
 		}
 	case BezierSegment:
 		switch fieldName {
