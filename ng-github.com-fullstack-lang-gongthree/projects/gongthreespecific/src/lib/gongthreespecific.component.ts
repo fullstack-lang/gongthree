@@ -208,7 +208,7 @@ export class GongthreespecificComponent {
     // Create geometry and material for the shape
     const geometry = new THREE.ShapeGeometry(shape);
     const material = new THREE.MeshStandardMaterial({
-      color: 0x8FA382,  // A more distinct color from your palette
+      color: 0x8FA382,
       side: THREE.DoubleSide,
       opacity: 1,
       transparent: false
@@ -216,11 +216,46 @@ export class GongthreespecificComponent {
     const mesh = new THREE.Mesh(geometry, material);
 
     // Adjust position to be more visible
-    mesh.position.z = 0;  // Ensure it's in the scene
-    mesh.rotation.x = 0;  // Remove previous rotation
+    mesh.position.z = 0;
+    mesh.rotation.x = 0;
 
     // Add to the scene
     this.scene.add(mesh);
+
+    // Create spheres to mark important points
+    const createPointMarker = (x: number, y: number, color: number) => {
+      const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+      const sphereMaterial = new THREE.MeshStandardMaterial({ color: color });
+      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      sphere.position.set(x, y, 0.1);  // Slightly above the shape
+      this.scene.add(sphere);
+    };
+
+    // Mark start point (red)
+    createPointMarker(
+      bezierSegment.StartX,
+      bezierSegment.StartY,
+      0xff0000
+    );
+
+    // Mark end point (green)
+    createPointMarker(
+      bezierSegment.EndX,
+      bezierSegment.EndY,
+      0x00ff00
+    );
+
+    // Mark control points (blue)
+    createPointMarker(
+      bezierSegment.ControlPointStartX,
+      bezierSegment.ControlPointStartY,
+      0x0000ff
+    );
+    createPointMarker(
+      bezierSegment.ControlPointEndX,
+      bezierSegment.ControlPointEndY,
+      0x0000ff
+    );
 
     // Optional: Add wireframe to help visualize shape
     const wireframe = new THREE.LineSegments(
