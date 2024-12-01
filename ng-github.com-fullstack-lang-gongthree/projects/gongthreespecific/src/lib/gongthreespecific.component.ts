@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/co
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { BezierSegment } from './bezier-segment';
 
 @Component({
   selector: 'lib-gongthreespecific',
@@ -58,7 +59,17 @@ export class GongthreespecificComponent {
 
     // this.createRandomExtrudedShape(8, 0.5, 8, 2, "#536C87")
 
-    this.createBezierShape()
+    // Create a BezierSegment instance
+    const bezierSegment = new BezierSegment(
+      new THREE.Vector2(-5, 4),
+      new THREE.Vector2(-2, 8),
+      new THREE.Vector2(2, 8),
+      new THREE.Vector2(5, 4)
+    );
+
+    // Call the method with the BezierSegment instance
+    this.createBezierShape(bezierSegment);
+
 
     // Add axes helper
     const axesHelper = new THREE.AxesHelper(2); // Length of the axes lines
@@ -178,32 +189,20 @@ export class GongthreespecificComponent {
     this.scene.add(extrudedMesh);
   }
 
-  private createBezierShape() {
-    // Define a bezier curve using the bezierSegment structure
-    const bezierSegment = {
-      StartX: -5,
-      StartY: 4,
-      ControlPointStartX: -2,
-      ControlPointStartY: 8,
-      ControlPointEndX: 2,
-      ControlPointEndY: 8,
-      EndX: 5,
-      EndY: 4
-    };
-
+  private createBezierShape(bezierSegment: BezierSegment) {
     // Create a shape
     const shape = new THREE.Shape();
-    shape.moveTo(bezierSegment.StartX, bezierSegment.StartY);
+    shape.moveTo(bezierSegment.Start.x, bezierSegment.Start.y);
     shape.bezierCurveTo(
-      bezierSegment.ControlPointStartX, bezierSegment.ControlPointStartY,
-      bezierSegment.ControlPointEndX, bezierSegment.ControlPointEndY,
-      bezierSegment.EndX, bezierSegment.EndY
+      bezierSegment.ControlPointStart.x, bezierSegment.ControlPointStart.y,
+      bezierSegment.ControlPointEnd.x, bezierSegment.ControlPointEnd.y,
+      bezierSegment.End.x, bezierSegment.End.y
     );
 
     // Close the shape to form an enclosed area
-    shape.lineTo(bezierSegment.EndX, -4);
-    shape.lineTo(bezierSegment.StartX, -4);
-    shape.lineTo(bezierSegment.StartX, bezierSegment.StartY);
+    shape.lineTo(bezierSegment.End.x, -4);
+    shape.lineTo(bezierSegment.Start.x, -4);
+    shape.lineTo(bezierSegment.Start.x, bezierSegment.Start.y);
 
     // Create geometry and material for the shape
     const geometry = new THREE.ShapeGeometry(shape);
@@ -223,39 +222,23 @@ export class GongthreespecificComponent {
     this.scene.add(mesh);
 
     // Create spheres to mark important points
-    const createPointMarker = (x: number, y: number, color: number) => {
+    const createPointMarker = (position: THREE.Vector2, color: number) => {
       const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
       const sphereMaterial = new THREE.MeshStandardMaterial({ color: color });
       const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-      sphere.position.set(x, y, 0.1);  // Slightly above the shape
+      sphere.position.set(position.x, position.y, 0.1); // Slightly above the shape
       this.scene.add(sphere);
     };
 
     // Mark start point (red)
-    createPointMarker(
-      bezierSegment.StartX,
-      bezierSegment.StartY,
-      0xff0000
-    );
+    createPointMarker(bezierSegment.Start, 0xff0000);
 
     // Mark end point (green)
-    createPointMarker(
-      bezierSegment.EndX,
-      bezierSegment.EndY,
-      0x00ff00
-    );
+    createPointMarker(bezierSegment.End, 0x00ff00);
 
     // Mark control points (blue)
-    createPointMarker(
-      bezierSegment.ControlPointStartX,
-      bezierSegment.ControlPointStartY,
-      0x0000ff
-    );
-    createPointMarker(
-      bezierSegment.ControlPointEndX,
-      bezierSegment.ControlPointEndY,
-      0x0000ff
-    );
+    createPointMarker(bezierSegment.ControlPointStart, 0x0000ff);
+    createPointMarker(bezierSegment.ControlPointEnd, 0x0000ff);
 
     // Optional: Add wireframe to help visualize shape
     const wireframe = new THREE.LineSegments(
@@ -264,6 +247,7 @@ export class GongthreespecificComponent {
     );
     this.scene.add(wireframe);
   }
+
 
 
 
