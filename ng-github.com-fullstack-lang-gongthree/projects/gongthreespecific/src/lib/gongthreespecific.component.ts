@@ -37,7 +37,7 @@ export class GongthreespecificComponent {
     // Create camera
     const aspectRatio = this.getAspectRatio();
     this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    this.camera.position.z = 5;
+    this.camera.position.z = 15;
 
     // Create renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -88,6 +88,8 @@ export class GongthreespecificComponent {
     // Add to the scene
     this.scene.add(hollowCylinder);
 
+    this.createRandomExtrudedShape()
+
     // Add axes helper
     const axesHelper = new THREE.AxesHelper(2); // Length of the axes lines
     this.scene.add(axesHelper);
@@ -137,4 +139,51 @@ export class GongthreespecificComponent {
     this.controls.dispose();
     this.renderer.dispose();
   }
+
+  private createRandomExtrudedShape() {
+    // Generate random points on a circle
+    const radius = 10;
+    const variation = 0;
+    const randomRadius = () => radius + (Math.random() * variation * 2 - variation);
+
+    const points = [];
+    const nbPoints = 3
+    for (let i = 0; i < nbPoints; i++) {
+      const angle = (i * Math.PI * 2) / nbPoints;
+      const r = randomRadius();
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+      points.push(new THREE.Vector2(x, y));
+    }
+
+    // Create a Bezier curve through the points
+    const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p.x, p.y, 0)), true);
+
+    // Convert the curve to a shape
+    const shape = new THREE.Shape();
+    const firstPoint = curve.getPointAt(0);
+    shape.moveTo(firstPoint.x, firstPoint.y);
+
+    const divisions = 50; // Smoothness of the shape
+    for (let i = 1; i <= divisions; i++) {
+      const point = curve.getPointAt(i / divisions);
+      shape.lineTo(point.x, point.y);
+    }
+    shape.closePath();
+
+    // Extrude the shape along the Z-axis
+    const extrudeSettings: THREE.ExtrudeGeometryOptions = {
+      depth: -0.5,
+      bevelEnabled: false,
+      steps: 1,
+    };
+
+    const extrudedGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    const material = new THREE.MeshStandardMaterial({ color: 0xff00ff });
+    const extrudedMesh = new THREE.Mesh(extrudedGeometry, material);
+
+    // Add the extruded shape to the scene
+    this.scene.add(extrudedMesh);
+  }
+
 }
