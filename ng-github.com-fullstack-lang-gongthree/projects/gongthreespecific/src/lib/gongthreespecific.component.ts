@@ -88,11 +88,13 @@ export class GongthreespecificComponent {
     // Add to the scene
     this.scene.add(hollowCylinder);
 
-    this.createRandomExtrudedShape(15, 0.5, 5, 0)
+    // ['#D1C5B4', '#8FA382', '#536C87'],
 
-    this.createRandomExtrudedShape(10, 0.5, 5, 1)
+    this.createRandomExtrudedShape(15, 0.5, 5, 0, "#D1C5B4")
 
-    this.createRandomExtrudedShape(8, 0.5, 8, 2)
+    this.createRandomExtrudedShape(10, 0.5, 5, 1, "#8FA382")
+
+    this.createRandomExtrudedShape(8, 0.5, 8, 2, "#536C87")
 
     // Add axes helper
     const axesHelper = new THREE.AxesHelper(2); // Length of the axes lines
@@ -148,7 +150,8 @@ export class GongthreespecificComponent {
     refRadius: number,
     variation: number,
     nbPoints: number,
-    zOrig: number) {
+    zOrig: number,
+    color: string) {
     // Generate random points on a circle
     const radius = refRadius;
     const randomRadius = () => radius + (Math.random() * variation * 2 - variation);
@@ -201,7 +204,7 @@ export class GongthreespecificComponent {
     };
 
     const extrudedGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    const material = new THREE.MeshStandardMaterial({ color: 0xff00ff });
+    const material = new THREE.MeshStandardMaterial({ color: color });
     const extrudedMesh = new THREE.Mesh(extrudedGeometry, material);
 
     // Set the position of the shape (including the Z parameter)
