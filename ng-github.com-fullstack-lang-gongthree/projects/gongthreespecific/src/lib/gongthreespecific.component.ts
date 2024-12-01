@@ -50,51 +50,15 @@ export class GongthreespecificComponent {
 
   private createObjects() {
 
-    // Create a hollow cylinder
-    const outerRadius = 0.5;
-    const wallThickness = 0.05;
-    const innerRadius = outerRadius - wallThickness;
-    const height = 5;
-
-    // Define the outer shape (circle)
-    const shape = new THREE.Shape();
-    shape.absarc(0, 0, outerRadius, 0, Math.PI * 2, false);
-
-    // Define the hole (inner circle)
-    const holePath = new THREE.Path();
-    holePath.absarc(0, 0, innerRadius, 0, Math.PI * 2, true);
-    shape.holes.push(holePath);
-
-    // Extrude settings with smooth rendering
-    const extrudeSettings: THREE.ExtrudeGeometryOptions = {
-      depth: height,
-      bevelEnabled: false,
-      steps: 1,
-      curveSegments: 64 // Increase the number of segments for smoothness
-    };
-
-    // Create the geometry
-    const hollowCylinderGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-
-    // Rotate the geometry to align it along the Y-axis
-    // hollowCylinderGeometry.rotateX(Math.PI / 2);
-
-    // Create the mesh
-    const hollowCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-    const hollowCylinder = new THREE.Mesh(hollowCylinderGeometry, hollowCylinderMaterial);
-    hollowCylinder.position.set(0, 0, -0.5);
-    hollowCylinder.position.y -= height / 2; // Adjust position since extrusion starts from z=0
-
-    // Add to the scene
-    this.scene.add(hollowCylinder);
-
     // ['#D1C5B4', '#8FA382', '#536C87'],
 
-    this.createRandomExtrudedShape(15, 0.5, 5, 0, "#D1C5B4")
+    // this.createRandomExtrudedShape(15, 0.5, 5, 0, "#D1C5B4")
 
-    this.createRandomExtrudedShape(10, 0.5, 5, 1, "#8FA382")
+    // this.createRandomExtrudedShape(10, 0.5, 5, 1, "#8FA382")
 
-    this.createRandomExtrudedShape(8, 0.5, 8, 2, "#536C87")
+    // this.createRandomExtrudedShape(8, 0.5, 8, 2, "#536C87")
+
+    this.createBezierShape()
 
     // Add axes helper
     const axesHelper = new THREE.AxesHelper(2); // Length of the axes lines
@@ -214,6 +178,57 @@ export class GongthreespecificComponent {
     this.scene.add(extrudedMesh);
   }
 
+  private createBezierShape() {
+    // Define a bezier curve using the bezierSegment structure
+    const bezierSegment = {
+      StartX: -5,
+      StartY: 4,
+      ControlPointStartX: -2,
+      ControlPointStartY: 8,
+      ControlPointEndX: 2,
+      ControlPointEndY: 8,
+      EndX: 5,
+      EndY: 4
+    };
+
+    // Create a shape
+    const shape = new THREE.Shape();
+    shape.moveTo(bezierSegment.StartX, bezierSegment.StartY);
+    shape.bezierCurveTo(
+      bezierSegment.ControlPointStartX, bezierSegment.ControlPointStartY,
+      bezierSegment.ControlPointEndX, bezierSegment.ControlPointEndY,
+      bezierSegment.EndX, bezierSegment.EndY
+    );
+
+    // Close the shape to form an enclosed area
+    shape.lineTo(bezierSegment.EndX, -4);
+    shape.lineTo(bezierSegment.StartX, -4);
+    shape.lineTo(bezierSegment.StartX, bezierSegment.StartY);
+
+    // Create geometry and material for the shape
+    const geometry = new THREE.ShapeGeometry(shape);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x8FA382,  // A more distinct color from your palette
+      side: THREE.DoubleSide,
+      opacity: 1,
+      transparent: false
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+
+    // Adjust position to be more visible
+    mesh.position.z = 0;  // Ensure it's in the scene
+    mesh.rotation.x = 0;  // Remove previous rotation
+
+    // Add to the scene
+    this.scene.add(mesh);
+
+    // Optional: Add wireframe to help visualize shape
+    const wireframe = new THREE.LineSegments(
+      new THREE.EdgesGeometry(geometry),
+      new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 })
+    );
+    this.scene.add(wireframe);
+  }
 
 
 
