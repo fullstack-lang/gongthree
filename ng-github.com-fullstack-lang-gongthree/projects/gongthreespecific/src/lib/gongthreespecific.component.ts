@@ -49,18 +49,6 @@ export class GongthreespecificComponent {
   }
 
   private createObjects() {
-    // Create a colorful cube
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const materials = [
-      new THREE.MeshStandardMaterial({ color: 0xff0000 }), // red
-      new THREE.MeshStandardMaterial({ color: 0x00ff00 }), // green
-      new THREE.MeshStandardMaterial({ color: 0x0000ff }), // blue
-      new THREE.MeshStandardMaterial({ color: 0xffff00 }), // yellow
-      new THREE.MeshStandardMaterial({ color: 0xff00ff }), // magenta
-      new THREE.MeshStandardMaterial({ color: 0x00ffff })  // cyan
-    ];
-    const cube = new THREE.Mesh(geometry, materials);
-    this.scene.add(cube);
 
     // Create a hollow cylinder
     const outerRadius = 0.5;
