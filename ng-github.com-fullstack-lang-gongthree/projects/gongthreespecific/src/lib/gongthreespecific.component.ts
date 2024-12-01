@@ -61,6 +61,43 @@ export class GongthreespecificComponent {
     ];
     const cube = new THREE.Mesh(geometry, materials);
     this.scene.add(cube);
+
+    // Create a hollow cylinder
+    const outerRadius = 0.5;
+    const wallThickness = 0.05;
+    const innerRadius = outerRadius - wallThickness;
+    const height = 2;
+
+    // Define the outer shape (circle)
+    const shape = new THREE.Shape();
+    shape.absarc(0, 0, outerRadius, 0, Math.PI * 2, false);
+
+    // Define the hole (inner circle)
+    const holePath = new THREE.Path();
+    holePath.absarc(0, 0, innerRadius, 0, Math.PI * 2, true);
+    shape.holes.push(holePath);
+
+    // Extrude settings
+    const extrudeSettings: THREE.ExtrudeGeometryOptions = {
+      depth: height,
+      bevelEnabled: false,
+      steps: 1,
+    };
+
+    // Create the geometry
+    const hollowCylinderGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+
+    // Rotate the geometry to align it along the Y-axis
+    hollowCylinderGeometry.rotateX(Math.PI / 2);
+
+    // Create the mesh
+    const hollowCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+    const hollowCylinder = new THREE.Mesh(hollowCylinderGeometry, hollowCylinderMaterial);
+    hollowCylinder.position.set(1.5, 0, 0); // Position cylinder slightly to the right
+    hollowCylinder.position.y -= height / 2; // Adjust position since extrusion starts from z=0
+
+    // Add to the scene
+    this.scene.add(hollowCylinder);
   }
 
   private setupLighting() {
