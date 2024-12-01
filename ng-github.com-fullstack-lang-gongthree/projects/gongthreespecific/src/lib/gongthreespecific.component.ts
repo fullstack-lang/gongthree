@@ -59,16 +59,37 @@ export class GongthreespecificComponent {
 
     // this.createRandomExtrudedShape(8, 0.5, 8, 2, "#536C87")
 
-    // Create a BezierSegment instance
-    const bezierSegment = new BezierSegment(
-      new THREE.Vector2(-5, 4),
-      new THREE.Vector2(-2, 8),
-      new THREE.Vector2(2, 8),
-      new THREE.Vector2(5, 4)
-    );
+    // Define multiple bezier segments
+    const bezierSegments: BezierSegment[] = [
+      new BezierSegment(
+        new THREE.Vector2(-5, 4),
+        new THREE.Vector2(-2, 8),
+        new THREE.Vector2(2, 8),
+        new THREE.Vector2(5, 4)
+      ),
+      new BezierSegment(
+        new THREE.Vector2(5, 4),
+        new THREE.Vector2(18, 0),
+        new THREE.Vector2(8, -4),
+        new THREE.Vector2(5, -8)
+      ),
+      new BezierSegment(
+        new THREE.Vector2(5, -8),
+        new THREE.Vector2(2, -12),
+        new THREE.Vector2(-2, -12),
+        new THREE.Vector2(-5, -8)
+      ),
+      new BezierSegment(
+        new THREE.Vector2(-5, -8),
+        new THREE.Vector2(-8, -4),
+        new THREE.Vector2(-8, 0),
+        new THREE.Vector2(-5, 4)
+      ),
+    ];
 
-    // Call the method with the BezierSegment instance
-    this.createBezierShape(bezierSegment);
+    // Call the method with the array of segments
+    this.createBezierShape(bezierSegments);
+
 
 
     // Add axes helper
@@ -189,20 +210,59 @@ export class GongthreespecificComponent {
     this.scene.add(extrudedMesh);
   }
 
-  private createBezierShape(bezierSegment: BezierSegment) {
+  private createBezierShape(bezierSegments: BezierSegment[]) {
+    // Check if the array is not empty
+    if (bezierSegments.length === 0) {
+      console.warn('No bezier segments provided.');
+      return;
+    }
+
     // Create a shape
     const shape = new THREE.Shape();
-    shape.moveTo(bezierSegment.Start.x, bezierSegment.Start.y);
-    shape.bezierCurveTo(
-      bezierSegment.ControlPointStart.x, bezierSegment.ControlPointStart.y,
-      bezierSegment.ControlPointEnd.x, bezierSegment.ControlPointEnd.y,
-      bezierSegment.End.x, bezierSegment.End.y
-    );
 
-    // Close the shape to form an enclosed area
-    shape.lineTo(bezierSegment.End.x, -4);
-    shape.lineTo(bezierSegment.Start.x, -4);
-    shape.lineTo(bezierSegment.Start.x, bezierSegment.Start.y);
+    // Move to the starting point of the first segment
+    const firstSegment = bezierSegments[0];
+    shape.moveTo(firstSegment.Start.x, firstSegment.Start.y);
+
+    // Create spheres to mark important points
+    const createPointMarker = (position: THREE.Vector2, color: number) => {
+      const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+      const sphereMaterial = new THREE.MeshStandardMaterial({ color: color });
+      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      sphere.position.set(position.x, position.y, 0.1); // Slightly above the shape
+      this.scene.add(sphere);
+    };
+
+    // Mark start point (red)
+    createPointMarker(firstSegment.Start, 0xff0000);
+
+    // Loop through each bezier segment and add it to the shape
+    for (let i = 0; i < bezierSegments.length; i++) {
+      const segment = bezierSegments[i];
+
+      // If this is not the first segment, ensure continuity
+      if (i > 0) {
+        // Optionally, move to the start point of the segment if it's not connected
+        // shape.lineTo(segment.Start.x, segment.Start.y);
+      }
+
+      // Add bezier curve to the shape
+      shape.bezierCurveTo(
+        segment.ControlPointStart.x, segment.ControlPointStart.y,
+        segment.ControlPointEnd.x, segment.ControlPointEnd.y,
+        segment.End.x, segment.End.y
+      );
+
+      // Mark control points (blue)
+      createPointMarker(segment.ControlPointStart, 0x0000ff);
+      createPointMarker(segment.ControlPointEnd, 0x0000ff);
+
+      createPointMarker(segment.End, 0x00ff00);
+
+    }
+
+    // Optionally close the shape
+    // shape.closePath();
 
     // Create geometry and material for the shape
     const geometry = new THREE.ShapeGeometry(shape);
@@ -221,25 +281,6 @@ export class GongthreespecificComponent {
     // Add to the scene
     this.scene.add(mesh);
 
-    // Create spheres to mark important points
-    const createPointMarker = (position: THREE.Vector2, color: number) => {
-      const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-      const sphereMaterial = new THREE.MeshStandardMaterial({ color: color });
-      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-      sphere.position.set(position.x, position.y, 0.1); // Slightly above the shape
-      this.scene.add(sphere);
-    };
-
-    // Mark start point (red)
-    createPointMarker(bezierSegment.Start, 0xff0000);
-
-    // Mark end point (green)
-    createPointMarker(bezierSegment.End, 0x00ff00);
-
-    // Mark control points (blue)
-    createPointMarker(bezierSegment.ControlPointStart, 0x0000ff);
-    createPointMarker(bezierSegment.ControlPointEnd, 0x0000ff);
-
     // Optional: Add wireframe to help visualize shape
     const wireframe = new THREE.LineSegments(
       new THREE.EdgesGeometry(geometry),
@@ -247,6 +288,7 @@ export class GongthreespecificComponent {
     );
     this.scene.add(wireframe);
   }
+
 
 
 
