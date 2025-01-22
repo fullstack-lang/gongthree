@@ -866,7 +866,40 @@ func GetFieldsFromPointer[Type PointerToGongstruct]() (res []string) {
 	return
 }
 
-func GetFieldStringValueFromPointer[Type PointerToGongstruct](instance Type, fieldName string) (res string) {
+type GongFieldValueType string
+
+const (
+	GongFieldValueTypeInt     GongFieldValueType = "GongFieldValueTypeInt"
+	GongFieldValueTypeFloat   GongFieldValueType = "GongFieldValueTypeFloat"
+	GongFieldValueTypeBool    GongFieldValueType = "GongFieldValueTypeBool"
+	GongFieldValueTypeOthers  GongFieldValueType = "GongFieldValueTypeOthers"
+)
+
+type GongFieldValue struct {
+	valueString string
+	GongFieldValueType
+	valueInt   int
+	valueFloat float64
+	valueBool  bool
+}
+
+func (gongValueField *GongFieldValue) GetValueString() string {
+	return gongValueField.valueString
+}
+
+func (gongValueField *GongFieldValue) GetValueInt() int {
+	return gongValueField.valueInt
+}
+	
+func (gongValueField *GongFieldValue) GetValueFloat() float64 {
+	return gongValueField.valueFloat
+}
+	
+func (gongValueField *GongFieldValue) GetValueBool() bool {
+	return gongValueField.valueBool
+}
+
+func GetFieldStringValueFromPointer(instance any, fieldName string) (res GongFieldValue) {
 
 	switch inferedInstance := any(instance).(type) {
 	// insertion point for generic get gongstruct field value
@@ -874,48 +907,52 @@ func GetFieldStringValueFromPointer[Type PointerToGongstruct](instance Type, fie
 		switch fieldName {
 		// string value of fields
 		case "Name":
-			res = inferedInstance.Name
+			res.valueString = inferedInstance.Name
 		case "BezierSegments":
 			for idx, __instance__ := range inferedInstance.BezierSegments {
 				if idx > 0 {
-					res += "\n"
+					res.valueString += "\n"
 				}
-				res += __instance__.Name
+				res.valueString += __instance__.Name
 			}
 		case "Color":
-			res = inferedInstance.Color
+			res.valueString = inferedInstance.Color
 		}
 	case *BezierSegment:
 		switch fieldName {
 		// string value of fields
 		case "Name":
-			res = inferedInstance.Name
+			res.valueString = inferedInstance.Name
 		case "Start":
 			if inferedInstance.Start != nil {
-				res = inferedInstance.Start.Name
+				res.valueString = inferedInstance.Start.Name
 			}
 		case "ControlPointStart":
 			if inferedInstance.ControlPointStart != nil {
-				res = inferedInstance.ControlPointStart.Name
+				res.valueString = inferedInstance.ControlPointStart.Name
 			}
 		case "ControlPointEnd":
 			if inferedInstance.ControlPointEnd != nil {
-				res = inferedInstance.ControlPointEnd.Name
+				res.valueString = inferedInstance.ControlPointEnd.Name
 			}
 		case "End":
 			if inferedInstance.End != nil {
-				res = inferedInstance.End.Name
+				res.valueString = inferedInstance.End.Name
 			}
 		}
 	case *Vector2:
 		switch fieldName {
 		// string value of fields
 		case "Name":
-			res = inferedInstance.Name
+			res.valueString = inferedInstance.Name
 		case "X":
-			res = fmt.Sprintf("%f", inferedInstance.X)
+			res.valueString = fmt.Sprintf("%f", inferedInstance.X)
+			res.valueFloat = inferedInstance.X
+			res.GongFieldValueType = GongFieldValueTypeFloat
 		case "Y":
-			res = fmt.Sprintf("%f", inferedInstance.Y)
+			res.valueString = fmt.Sprintf("%f", inferedInstance.Y)
+			res.valueFloat = inferedInstance.Y
+			res.GongFieldValueType = GongFieldValueTypeFloat
 		}
 	default:
 		_ = inferedInstance
@@ -923,7 +960,7 @@ func GetFieldStringValueFromPointer[Type PointerToGongstruct](instance Type, fie
 	return
 }
 
-func GetFieldStringValue[Type Gongstruct](instance Type, fieldName string) (res string) {
+func GetFieldStringValue(instance any, fieldName string) (res GongFieldValue) {
 
 	switch inferedInstance := any(instance).(type) {
 	// insertion point for generic get gongstruct field value
@@ -931,48 +968,52 @@ func GetFieldStringValue[Type Gongstruct](instance Type, fieldName string) (res 
 		switch fieldName {
 		// string value of fields
 		case "Name":
-			res = inferedInstance.Name
+			res.valueString = inferedInstance.Name
 		case "BezierSegments":
 			for idx, __instance__ := range inferedInstance.BezierSegments {
 				if idx > 0 {
-					res += "\n"
+					res.valueString += "\n"
 				}
-				res += __instance__.Name
+				res.valueString += __instance__.Name
 			}
 		case "Color":
-			res = inferedInstance.Color
+			res.valueString = inferedInstance.Color
 		}
 	case BezierSegment:
 		switch fieldName {
 		// string value of fields
 		case "Name":
-			res = inferedInstance.Name
+			res.valueString = inferedInstance.Name
 		case "Start":
 			if inferedInstance.Start != nil {
-				res = inferedInstance.Start.Name
+				res.valueString = inferedInstance.Start.Name
 			}
 		case "ControlPointStart":
 			if inferedInstance.ControlPointStart != nil {
-				res = inferedInstance.ControlPointStart.Name
+				res.valueString = inferedInstance.ControlPointStart.Name
 			}
 		case "ControlPointEnd":
 			if inferedInstance.ControlPointEnd != nil {
-				res = inferedInstance.ControlPointEnd.Name
+				res.valueString = inferedInstance.ControlPointEnd.Name
 			}
 		case "End":
 			if inferedInstance.End != nil {
-				res = inferedInstance.End.Name
+				res.valueString = inferedInstance.End.Name
 			}
 		}
 	case Vector2:
 		switch fieldName {
 		// string value of fields
 		case "Name":
-			res = inferedInstance.Name
+			res.valueString = inferedInstance.Name
 		case "X":
-			res = fmt.Sprintf("%f", inferedInstance.X)
+			res.valueString = fmt.Sprintf("%f", inferedInstance.X)
+			res.valueFloat = inferedInstance.X
+			res.GongFieldValueType = GongFieldValueTypeFloat
 		case "Y":
-			res = fmt.Sprintf("%f", inferedInstance.Y)
+			res.valueString = fmt.Sprintf("%f", inferedInstance.Y)
+			res.valueFloat = inferedInstance.Y
+			res.GongFieldValueType = GongFieldValueTypeFloat
 		}
 	default:
 		_ = inferedInstance

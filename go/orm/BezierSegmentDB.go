@@ -396,13 +396,15 @@ func (beziersegmentDB *BezierSegmentDB) DecodePointers(backRepo *BackRepoStruct,
 		if id != 0 {
 			tmp, ok := backRepo.BackRepoVector2.Map_Vector2DBID_Vector2Ptr[uint(id)]
 
+			// if the pointer id is unknown, it is not a problem, maybe the target was removed from the front
 			if !ok {
-				log.Fatalln("DecodePointers: beziersegment.Start, unknown pointer id", id)
-			}
-
-			// updates only if field has changed
-			if beziersegment.Start == nil || beziersegment.Start != tmp {
-				beziersegment.Start = tmp
+				log.Println("DecodePointers: beziersegment.Start, unknown pointer id", id)
+				beziersegment.Start = nil
+			} else {
+				// updates only if field has changed
+				if beziersegment.Start == nil || beziersegment.Start != tmp {
+					beziersegment.Start = tmp
+				}
 			}
 		} else {
 			beziersegment.Start = nil
@@ -415,13 +417,15 @@ func (beziersegmentDB *BezierSegmentDB) DecodePointers(backRepo *BackRepoStruct,
 		if id != 0 {
 			tmp, ok := backRepo.BackRepoVector2.Map_Vector2DBID_Vector2Ptr[uint(id)]
 
+			// if the pointer id is unknown, it is not a problem, maybe the target was removed from the front
 			if !ok {
-				log.Fatalln("DecodePointers: beziersegment.ControlPointStart, unknown pointer id", id)
-			}
-
-			// updates only if field has changed
-			if beziersegment.ControlPointStart == nil || beziersegment.ControlPointStart != tmp {
-				beziersegment.ControlPointStart = tmp
+				log.Println("DecodePointers: beziersegment.ControlPointStart, unknown pointer id", id)
+				beziersegment.ControlPointStart = nil
+			} else {
+				// updates only if field has changed
+				if beziersegment.ControlPointStart == nil || beziersegment.ControlPointStart != tmp {
+					beziersegment.ControlPointStart = tmp
+				}
 			}
 		} else {
 			beziersegment.ControlPointStart = nil
@@ -434,13 +438,15 @@ func (beziersegmentDB *BezierSegmentDB) DecodePointers(backRepo *BackRepoStruct,
 		if id != 0 {
 			tmp, ok := backRepo.BackRepoVector2.Map_Vector2DBID_Vector2Ptr[uint(id)]
 
+			// if the pointer id is unknown, it is not a problem, maybe the target was removed from the front
 			if !ok {
-				log.Fatalln("DecodePointers: beziersegment.ControlPointEnd, unknown pointer id", id)
-			}
-
-			// updates only if field has changed
-			if beziersegment.ControlPointEnd == nil || beziersegment.ControlPointEnd != tmp {
-				beziersegment.ControlPointEnd = tmp
+				log.Println("DecodePointers: beziersegment.ControlPointEnd, unknown pointer id", id)
+				beziersegment.ControlPointEnd = nil
+			} else {
+				// updates only if field has changed
+				if beziersegment.ControlPointEnd == nil || beziersegment.ControlPointEnd != tmp {
+					beziersegment.ControlPointEnd = tmp
+				}
 			}
 		} else {
 			beziersegment.ControlPointEnd = nil
@@ -453,13 +459,15 @@ func (beziersegmentDB *BezierSegmentDB) DecodePointers(backRepo *BackRepoStruct,
 		if id != 0 {
 			tmp, ok := backRepo.BackRepoVector2.Map_Vector2DBID_Vector2Ptr[uint(id)]
 
+			// if the pointer id is unknown, it is not a problem, maybe the target was removed from the front
 			if !ok {
-				log.Fatalln("DecodePointers: beziersegment.End, unknown pointer id", id)
-			}
-
-			// updates only if field has changed
-			if beziersegment.End == nil || beziersegment.End != tmp {
-				beziersegment.End = tmp
+				log.Println("DecodePointers: beziersegment.End, unknown pointer id", id)
+				beziersegment.End = nil
+			} else {
+				// updates only if field has changed
+				if beziersegment.End == nil || beziersegment.End != tmp {
+					beziersegment.End = tmp
+				}
 			}
 		} else {
 			beziersegment.End = nil
